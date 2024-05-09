@@ -1,5 +1,5 @@
 export {TurnsList} from './TurnsList';
 export {Dashboard} from './Dashboard';
-export {ListItems} from './ListItems';
+export {secondaryListItems, mainListItems} from './Dashboard/ListItems';
 export {Orders} from './Orders';
 export {Title} from './Title';

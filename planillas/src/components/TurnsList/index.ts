@@ -1,1 +1,1 @@
-export * from './TurnsList';
+export {TurnsList} from './TurnsList';
