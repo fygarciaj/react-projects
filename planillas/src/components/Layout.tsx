@@ -121,9 +121,7 @@ export function Layout() {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              <Link to='/' component={RouterLink}>
-                Dashboard
-              </Link>
+              Dashboard
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
@@ -164,12 +162,11 @@ export function Layout() {
             overflow: 'auto',
           }}
         >
-          <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Paper>
+          <Container maxWidth="xs" sx={{ mt: 4, mb: 2 }}>
+            <Box sx={{ height: '100vh' }}>
               <Outlet />
-            </Paper>
             <Copyright sx={{ pt: 4 }} />
+            </Box>
           </Container>
         </Box>
       </Box>
