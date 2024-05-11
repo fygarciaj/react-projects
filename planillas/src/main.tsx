@@ -10,7 +10,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Sanctum } from "react-sanctum";
 
 const sanctumConfig = {
-  apiUrl: "http://miestacion.test",
+  apiUrl: "http://speedvillarosa.ddns.net:8000",
   csrfCookieRoute: "sanctum/csrf-cookie",
   signInRoute: "login",
   signOutRoute: "logout",

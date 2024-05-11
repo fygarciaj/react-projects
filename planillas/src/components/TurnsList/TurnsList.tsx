@@ -17,7 +17,7 @@ export function TurnsList() {
     async function fetchData() {
       try {
 
-        const response = await axios.get('http://miestacion.test/api/cierres');
+        const response = await axios.get('api/cierres');
         console.log(response.data)
         setDatos(response.data.data);
         console.log(datos);
@@ -30,24 +30,24 @@ export function TurnsList() {
   }, []);
 
   return (
-    <>
-      <Grid item xs={12}>
-        <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-          <Title>Listado de Ultimos Cierres</Title>
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Fecha</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-      </Grid>
-    </>
+    <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+        <Title>Listado de Ultimos Cierres</Title>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Fecha</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell>
+                  {datos}
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Paper>
   );
 }
