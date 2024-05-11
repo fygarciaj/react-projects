@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Paper } from '@mui/material';
+import { Box, Container, Grid, Paper } from '@mui/material';
 import { Title } from './../components/Title/Title';
 
 
@@ -8,6 +8,7 @@ export function Planilla() {
 
     return (
         <>
+        <Container maxWidth='lg' sx={{ color: 'pink' }}>
             <Title>Planilla de Caja</Title>
             <Grid container spacing={2}>
                 <Grid item xs={4}>
@@ -19,6 +20,7 @@ export function Planilla() {
                     </Paper>
                 </Grid>
             </Grid>
+            </Container>
         </>
     );
 
