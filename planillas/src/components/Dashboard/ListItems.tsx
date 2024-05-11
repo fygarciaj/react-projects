@@ -10,6 +10,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import { Link as RouterLink } from 'react-router-dom';
 import Link from '@mui/material/Link';
+import { pink } from '@mui/material/colors';
 
 export const mainListItems = (
   <React.Fragment>
@@ -31,7 +32,9 @@ export const mainListItems = (
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>
-        <PeopleIcon />
+        <Link to='/customer' component={RouterLink}>
+          <PeopleIcon sx={{ color: pink[500] }}/>
+        </Link>
       </ListItemIcon>
       <Link to='/customer' component={RouterLink}>
         <ListItemText primary="Clientes" />
@@ -49,10 +52,19 @@ export const mainListItems = (
       <ListItemIcon>
         <ShoppingCartIcon />
       </ListItemIcon>
+      <Link to='/dashboard' component={RouterLink}>
+        <ListItemText primary="Tablero" />
+      </Link>
+    </ListItemButton>
+    <ListItemButton>
+      <ListItemIcon>
+        <ShoppingCartIcon />
+      </ListItemIcon>
       <Link to='/about' component={RouterLink}>
         <ListItemText primary="Acerca de" />
       </Link>
     </ListItemButton>
+
   </React.Fragment>
 );
 

@@ -17,7 +17,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { mainListItems, secondaryListItems } from './Dashboard/ListItems';
 import { Outlet, Link as RouterLink } from 'react-router-dom';
-import { Paper } from '@mui/material';
+import { Grid, Paper } from '@mui/material';
 
 
 function Copyright(props: any) {
@@ -159,14 +159,18 @@ export function Layout() {
                 : theme.palette.grey[900],
             flexGrow: 1,
             height: '100vh',
-            overflow: 'auto',
+            position: 'relative',
+            ml: 5,
+            mt: 4
           }}
         >
-          <Container maxWidth="xs" sx={{ mt: 4, mb: 2 }}>
-            <Box sx={{ height: '100vh' }}>
-              <Outlet />
-            <Copyright sx={{ pt: 4 }} />
-            </Box>
+          <Container sx={{ mt: 4, mb: 4 }}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} md={12} lg={12}>
+                <Outlet />
+                <Copyright sx={{ pt: 4 }} />
+              </Grid>
+            </Grid>
           </Container>
         </Box>
       </Box>
