@@ -1,0 +1,1426 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model antecedentes {
+  id                     Int     @id @default(autoincrement())
+  NumeroHistoria         String? @db.VarChar(255)
+  AntecedentesPersonales String? @db.MediumText
+  AntecedentesFamiliares String? @db.MediumText
+  AntecedentesGO         String? @db.MediumText
+  Habitos                String? @db.MediumText
+  AntecedentesQx         String? @db.MediumText
+  M                      String? @db.VarChar(255)
+  FUM                    String? @db.VarChar(255)
+  FPP                    String? @db.VarChar(255)
+  CICLOS                 String? @db.VarChar(255)
+  EG                     String? @db.VarChar(255)
+  G                      String? @db.VarChar(255)
+  P                      String? @db.VarChar(255)
+  C                      String? @db.VarChar(255)
+  A                      String? @db.VarChar(255)
+  V                      String? @db.VarChar(255)
+  E                      String? @db.VarChar(255)
+  FUP                    String? @db.VarChar(255)
+  IVSA                   String? @db.VarChar(255)
+  GRUPO                  String? @db.VarChar(255)
+  RH                     String? @db.VarChar(255)
+  PPF                    String? @db.VarChar(255)
+  Citologia              String? @db.VarChar(255)
+  Mamografia             String? @db.VarChar(255)
+  Densitometria          String? @db.VarChar(255)
+
+  @@index([NumeroHistoria], map: "NumeroHistoria")
+}
+
+model datos1 {
+  id    Int     @id @default(autoincrement())
+  Campo String? @db.VarChar(255)
+
+  @@index([Campo], map: "Campo")
+}
+
+model datos2 {
+  id         Int     @id @default(autoincrement())
+  Campo      String? @db.VarChar(255)
+  Titulo     String? @db.VarChar(255)
+  Orden      Float?
+  PedirValor String? @db.Text
+
+  @@index([Campo], map: "Campo")
+  @@index([Titulo], map: "Titulo")
+}
+
+model datos3 {
+  id         Int     @id @default(autoincrement())
+  Campo      String? @db.VarChar(255)
+  Titulo     String? @db.VarChar(255)
+  Texto      String? @db.VarChar(255)
+  PedirValor String? @db.Text
+
+  @@index([Campo], map: "Campo")
+  @@index([Titulo], map: "Titulo")
+}
+
+model encreportes {
+  Id          Int       @id @default(autoincrement())
+  TITULO1     String?   @db.MediumText
+  TITULO2     String?   @db.MediumText
+  TITULO3     String?   @db.MediumText
+  TEXTO       String?   @db.MediumText
+  ENTIDAD     String?   @db.MediumText
+  TipoInforme String?   @db.MediumText
+  Fecha       DateTime? @db.DateTime(0)
+  IdMedico    String?   @db.VarChar(255)
+}
+
+model frecuencia {
+  IDFRECUENCIA  Int     @id @default(autoincrement())
+  INVFRECUENCIA String? @db.VarChar(255)
+}
+
+model inventario {
+  TIPO_DE_DOCUMENTO   Int?      @map("TIPO DE DOCUMENTO")
+  NUMERO_DE_DOCUMENTO Decimal?  @unique(map: "NUMERO DE DOCUMENTO") @map("NUMERO DE DOCUMENTO") @db.Decimal(18, 1)
+  NOMBRE_DE_PACIENTE  String?   @map("NOMBRE DE PACIENTE") @db.VarChar(100)
+  FECHA_INICIAL       DateTime? @map("FECHA INICIAL") @db.DateTime(0)
+  FECHA_FINAL         DateTime? @map("FECHA FINAL") @db.DateTime(0)
+  FOLIOS              Int?
+  UBICACION           Int?
+  FRECUENCIA          Int?
+  NOTAS               String?   @db.MediumText
+  Id                  Int       @id @default(autoincrement())
+  solicitado          String?   @db.Text
+}
+
+model rgubicacion {
+  ID_UBICACION  Int?    @map("ID UBICACION")
+  INV_UBICACION String? @map("INV UBICACION") @db.VarChar(255)
+  Id            Int     @id @default(autoincrement())
+
+  @@index([ID_UBICACION], map: "ID UBICACION")
+}
+
+model tablaacufenometria {
+  Id                 Int       @id @default(autoincrement())
+  NumeroHistoria     String?   @db.VarChar(255)
+  FechaAcufenometria DateTime? @db.DateTime(0)
+  odi3000            String?   @db.VarChar(255)
+  odi4000            String?   @db.VarChar(255)
+  odi6000            String?   @db.VarChar(255)
+  odi8000            String?   @db.VarChar(255)
+  odi1000            String?   @db.VarChar(255)
+  odi2000            String?   @db.VarChar(255)
+  odi250             String?   @db.VarChar(255)
+  odi500             String?   @db.VarChar(255)
+  oii3000            String?   @db.VarChar(255)
+  oii4000            String?   @db.VarChar(255)
+  oii6000            String?   @db.VarChar(255)
+  oii8000            String?   @db.VarChar(255)
+  oii1000            String?   @db.VarChar(255)
+  oii2000            String?   @db.VarChar(255)
+  oii250             String?   @db.VarChar(255)
+  oii500             String?   @db.VarChar(255)
+  MotivoConsulta     String?   @db.MediumText
+  Recomendacion      String?   @db.MediumText
+  Descripcion        String?   @db.MediumText
+  Idprestador        String?   @db.VarChar(30)
+  IdMedico           String?   @db.VarChar(30)
+  estado             String?   @db.VarChar(30)
+}
+
+model tablaambito {
+  id          Float   @id @default(0)
+  Descripcion String? @db.VarChar(30)
+}
+
+model tablaanexos {
+  Id             Int       @id @default(autoincrement())
+  NumeroHistoria String?   @db.VarChar(100)
+  PathAnexo      String?   @db.MediumText
+  txtImg         String?   @db.VarChar(255)
+  FechaAlta      DateTime? @db.DateTime(0)
+  TipoArchivo    String?   @db.VarChar(255)
+  ImpPaquete     String?   @db.VarChar(2)
+
+  @@index([NumeroHistoria], map: "NumeroHistoria")
+}
+
+model tablaantecedentes {
+  id             Int     @id @default(autoincrement())
+  numerohistoria String? @unique(map: "numerohistoria") @db.VarChar(20)
+  infancia       String? @db.Text
+  patologicos    String? @db.Text
+  farmacologicos String? @db.Text
+  toxicos        String? @db.Text
+  otros          String? @db.Text
+  familiares     String? @db.Text
+  grupoapoyo     String? @db.Text
+  economia       String? @db.Text
+  profesion      String? @db.Text
+  entornosocial  String? @db.Text
+  vivienda       String? @db.Text
+  sistemalegal   String? @db.Text
+  otrosfactores  String? @db.Text
+  sanitarios     String? @db.Text
+  educativo      String? @db.Text
+  biografia      String? @db.Text
+}
+
+model tablaareas {
+  Id           Int     @id @default(autoincrement())
+  Area         String? @db.VarChar(255)
+  Departamento String? @db.VarChar(255)
+  codigo       Int?
+
+  @@index([Area], map: "Area")
+}
+
+model tablaareasusuarios {
+  Id              Int     @id @default(autoincrement())
+  NumeroDocumento String? @db.VarChar(255)
+  AreasUsuario    Int
+  area            String? @db.VarChar(255)
+}
+
+model tablaaudiometrias {
+  Id                                Int       @id @default(autoincrement())
+  NumeroHistoria                    String?   @db.VarChar(50)
+  NumeroDocumento                   String?   @db.VarChar(255)
+  FechaAtencion                     DateTime? @db.DateTime(0)
+  NumeroInforme                     String?   @db.VarChar(255)
+  TipoEvaluacion                    String?   @db.VarChar(255)
+  InterpretacionAudiometria         String?   @db.MediumText
+  InterpretacionLogoAudiometria     String?   @db.MediumText
+  Impedanciometria                  String?   @db.MediumText
+  Electronistragmografia            String?   @db.MediumText
+  Calibracion_Rastreo_Optoquinetico String?   @map("Calibracion-Rastreo-Optoquinetico") @db.MediumText
+  Pruebasposicionales               String?   @db.MediumText
+  PruebasCaloricas                  String?   @db.MediumText
+  PathImg1                          String?   @db.MediumText
+  PathImg2                          String?   @db.MediumText
+  OIUmbralVoz                       String?   @db.VarChar(255)
+  OIUmbralPalabra                   String?   @db.VarChar(255)
+  OIUmbralCaptacion                 String?   @db.VarChar(255)
+  OIUmbralDiscriminacion            String?   @db.VarChar(255)
+  ODUmbralVoz                       String?   @db.VarChar(255)
+  ODUmbralPalabra                   String?   @db.VarChar(255)
+  ODUmbralCaptacion                 String?   @db.VarChar(255)
+  ODUmbralDiscriminacion            String?   @db.VarChar(255)
+  AntecedentesOtologicos            String?   @db.MediumText
+  Edad                              String?   @db.VarChar(255)
+  OI1                               String?   @db.VarChar(255)
+  OI2                               String?   @db.VarChar(255)
+  OI3                               String?   @db.VarChar(255)
+  OI4                               String?   @db.VarChar(255)
+  OI5                               String?   @db.VarChar(255)
+  OI6                               String?   @db.VarChar(255)
+  OI7                               String?   @db.VarChar(255)
+  OI8                               String?   @db.VarChar(255)
+  OI9                               String?   @db.VarChar(255)
+  OD1                               String?   @db.VarChar(255)
+  OD2                               String?   @db.VarChar(255)
+  OD3                               String?   @db.VarChar(255)
+  OD4                               String?   @db.VarChar(255)
+  OD5                               String?   @db.VarChar(255)
+  OD6                               String?   @db.VarChar(255)
+  OD7                               String?   @db.VarChar(255)
+  OD8                               String?   @db.VarChar(255)
+  OD9                               String?   @db.VarChar(255)
+  ExamenAnterior                    String?   @db.MediumText
+  OtoscopiaOD                       String?   @db.VarChar(255)
+  OtoscopiaOI                       String?   @db.VarChar(255)
+  Recomendaciones                   String?   @db.MediumText
+  Control                           String?   @db.VarChar(255)
+  Medico                            String?   @db.VarChar(255)
+  ProfesionalRealizaexamen          String?   @db.VarChar(255)
+  srtod                             String?   @db.VarChar(10)
+  sdod                              String?   @db.VarChar(10)
+  descod                            String?   @db.VarChar(10)
+  srtoi                             String?   @db.VarChar(10)
+  sdoi                              String?   @db.VarChar(10)
+  descoi                            String?   @db.VarChar(10)
+  idMedico                          String?   @db.VarChar(30)
+  IdPrestador                       String?   @db.VarChar(30)
+  estado                            String?   @db.VarChar(30)
+
+  @@index([NumeroDocumento], map: "NumeroDocumento")
+  @@index([NumeroHistoria], map: "NumeroHistoria")
+}
+
+model tablabitacoras {
+  Id            Int       @id @default(autoincrement())
+  usuario       String?   @db.VarChar(255)
+  Fechabitacora DateTime? @db.Date
+  Horabitacora  String?   @db.VarChar(20)
+  Equipo        String?   @db.VarChar(255)
+  evento        String?   @db.VarChar(250)
+}
+
+model tablacitas {
+  Id               Int       @id @default(autoincrement())
+  Fecha            DateTime? @db.Date
+  Hora             String?   @db.Char(16)
+  NumeroDocumento  String?   @db.Char(20)
+  Paciente         String?   @db.Char(100)
+  Entidad          String?   @db.Char(100)
+  Telefono         String?   @db.Char(50)
+  Observaciones    String?   @db.Char(100)
+  IdMedico         String?   @db.Char(20)
+  Estado           String?   @db.Char(50)
+  Evento           String?   @db.Char(30)
+  ValorEvento      Decimal?  @db.Decimal(11, 2)
+  NumeroHistoria   String?   @db.Char(30)
+  Turno            Int?
+  DiaLock          String?   @db.Char(6)
+  FormaPago        String?   @db.Char(30)
+  ValorCuotaMod    String?   @db.Char(20)
+  IdPrestador      String?   @db.Char(30)
+  FechaHraSolicita DateTime? @db.Date
+  FechaHraAtiende  DateTime? @db.Date
+  Area             String?   @db.Char(50)
+  DxPrincipal      String?   @db.Char(30)
+  IdRIPS           String?   @db.Char(30)
+  Consultorio      String?   @db.Char(5)
+  RIPS             String?   @db.Char(50)
+  cantidad         Int?
+  FechaDeseada     DateTime? @db.Date
+  FechaSolicitud   DateTime? @db.Date
+
+  @@index([IdMedico], map: "IdMedico")
+  @@index([NumeroDocumento], map: "NumeroDocumento")
+  @@index([NumeroHistoria], map: "NumeroHistoria")
+}
+
+model tablacodigosisssoat {
+  Id              Int     @id @default(autoincrement())
+  CodigoCUPS      String? @db.VarChar(10)
+  DescripcionCUPS String? @db.VarChar(255)
+  CodigoSOAT      String? @db.VarChar(10)
+  DescripcionSOAT String? @db.VarChar(255)
+  CodigoISS       String? @db.VarChar(10)
+  DescripcionISS  String? @db.MediumText
+  Femenino        String? @db.VarChar(2)
+  Masculino       String? @db.VarChar(2)
+  Archivo         String? @db.VarChar(10)
+}
+
+model tablacolposcopias {
+  Indice                       Int       @id @default(autoincrement())
+  NumeroHistoria               String?   @db.VarChar(255)
+  NumeroColposcopia            String?   @db.VarChar(255)
+  FechaColposcopia             DateTime? @db.DateTime(0)
+  Colposcopia                  String?   @db.VarChar(255)
+  Hallazgos                    String?   @db.MediumText
+  Edad                         String?   @db.VarChar(50)
+  Observaciones                String?   @db.MediumText
+  Diagnostico                  String?   @db.MediumText
+  Menarca                      String?   @db.VarChar(255)
+  IRS                          String?   @db.VarChar(255)
+  Plan                         String?   @db.MediumText
+  Biopsia                      String?   @db.VarChar(255)
+  NumeroParejas                String?   @db.VarChar(255)
+  Gestas                       String?   @db.VarChar(255)
+  SitioBiopsia                 String?   @db.MediumText
+  Paras                        String?   @db.VarChar(255)
+  Cesareas                     String?   @db.VarChar(255)
+  Abortos                      String?   @db.VarChar(255)
+  AntEnfClinicas               String?   @db.VarChar(255)
+  AntQuirurgicos               String?   @db.VarChar(255)
+  FUM                          String?   @db.VarChar(255)
+  EnfermedadesInmunosupresores String?   @db.VarChar(255)
+  OtrosDatos                   String?   @db.VarChar(255)
+  FechaCitologia               DateTime? @db.DateTime(0)
+  ResultadoCitologia           String?   @db.VarChar(255)
+  PathImg1                     String?   @db.MediumText
+  PathImg2                     String?   @db.MediumText
+  PathImg3                     String?   @db.MediumText
+  PathImg4                     String?   @db.MediumText
+  PathImg5                     String?   @db.MediumText
+  Medico                       String?   @db.VarChar(255)
+  HraColposcopia               DateTime? @db.Time(0)
+  Area                         String?   @db.Text
+  TipoIdentificacion           String?   @db.Text
+  IdRips                       String?   @db.VarChar(10)
+  TipoUsuario                  String?   @db.Text
+  EC                           Int?
+  CodEntidad                   Int?
+}
+
+model tablaconfhorarios {
+  Id         Int     @id @default(autoincrement())
+  DiaSemana  String? @db.VarChar(255)
+  HraIniM    String? @db.VarChar(255)
+  HraFinT    String? @db.VarChar(255)
+  HraIniT    String? @db.VarChar(255)
+  HraFinM    String? @db.VarChar(255)
+  IdTratante String? @db.VarChar(255)
+  Intervalo  Int?
+}
+
+model tablaconfhorariosxfecha {
+  Id          Int       @id @default(autoincrement())
+  HraIniM     String?   @db.VarChar(255)
+  HraFinT     String?   @db.VarChar(255)
+  HraIniT     String?   @db.VarChar(255)
+  HraFinM     String?   @db.VarChar(255)
+  IdTratante  String?   @db.VarChar(255)
+  Intervalo   Int?
+  FechaActiva DateTime? @db.DateTime(0)
+}
+
+model tablaconfighorario {
+  Id             Int     @id @default(autoincrement())
+  IntervaloCitas Int?
+  HraIniM        String? @db.VarChar(255)
+  HraFINT        String? @db.VarChar(255)
+  CItasXdia      Float?
+  IdTratante     String? @db.VarChar(255)
+  HoraIniT       String? @db.VarChar(255)
+  HoraFinT       String? @db.VarChar(255)
+}
+
+model tablaconfmt {
+  Id        Int    @id @default(autoincrement())
+  SMLVD     Float?
+  yearSMLVD Float?
+}
+
+model tablaconsultamedicinagral {
+  Indexado           Int       @id @default(autoincrement())
+  NumeroHistoria     String?   @db.VarChar(255)
+  NumeroDocumento    String?   @db.VarChar(255)
+  FechaConsulta      DateTime? @db.Date
+  HoraConsulta       DateTime? @db.Time(0)
+  MotivoConsulta     String?   @db.MediumText
+  Pulso              String?   @db.VarChar(255)
+  Temperatura        String?   @db.VarChar(255)
+  TensionArterial    String?   @db.VarChar(255)
+  Peso               String?   @db.VarChar(255)
+  Respiracion        String?   @db.VarChar(255)
+  Talla              String?   @db.VarChar(255)
+  AspectoGeneral     String?   @db.MediumText
+  RevisionesSistemas String?   @db.MediumText
+  DxPrincipal        String?   @db.VarChar(255)
+  DxR1               String?   @db.VarChar(255)
+  DxR2               String?   @db.VarChar(255)
+  DxR3               String?   @db.VarChar(255)
+  DxPrincipaltxt     String?   @db.MediumText
+  DxR1txt            String?   @db.MediumText
+  DxR2txt            String?   @db.MediumText
+  DxR3txt            String?   @db.MediumText
+  OtrosDx            String?   @db.MediumText
+  AyudasDx           String?   @db.MediumText
+  PlanTratamiento    String?   @db.MediumText
+  Incapacidades      String?   @db.MediumText
+  idPrestador        String?   @db.VarChar(50)
+  Medico             String?   @db.VarChar(255)
+  NumeroConsulta     String?   @db.VarChar(255)
+  EnfermedadActual   String?   @db.MediumText
+  edad               String?   @db.MediumText
+  Area               String?   @db.MediumText
+  IdRips             String?   @db.VarChar(10)
+  FC                 String?   @db.MediumText
+  FR                 String?   @db.MediumText
+  TipoIdentificacion String?   @db.MediumText
+  CodEntidad         String?   @db.MediumText
+  EC                 String?   @db.MediumText
+  TipoUsuario        String?   @db.MediumText
+  TA                 String?   @db.MediumText
+  Estado             String?   @db.MediumText
+  saturacion         String?   @db.VarChar(20)
+  atabaquico         String?   @db.Text
+  alaborales         String?   @db.Text
+
+  @@index([NumeroHistoria], map: "NumeroHistoria")
+}
+
+model tablaconsultas {
+  id                   Int       @id @default(autoincrement())
+  NumeroHistoria       String?   @db.VarChar(255)
+  NumeroIdentificacion String?   @db.VarChar(20)
+  CodigoEntidad        String?   @db.VarChar(255)
+  NumeroConsulta       String?   @db.VarChar(255)
+  FechaConsulta        DateTime? @db.DateTime(0)
+  MotivoConsulta       String?   @db.MediumText
+  EnfermedadActual     String?   @db.MediumText
+  Repertorio           String?   @db.MediumText
+  Generales            String?   @db.MediumText
+  Mentales             String?   @db.MediumText
+  Particulares         String?   @db.MediumText
+  TA                   String?   @db.VarChar(255)
+  FC                   String?   @db.VarChar(255)
+  FR                   String?   @db.VarChar(255)
+  Temp                 String?   @db.VarChar(255)
+  Talla                String?   @db.VarChar(255)
+  Peso                 String?   @db.VarChar(255)
+  Dermatron            String?   @db.MediumText
+  Recomendaciones      String?   @db.MediumText
+  ExamenClinico        String?   @db.MediumText
+  DxPrincipal          String?   @db.VarChar(255)
+  DxPrincipalTxt       String?   @db.VarChar(255)
+  DxR1                 String?   @db.VarChar(255)
+  DxR1txt              String?   @db.VarChar(255)
+  DxR2                 String?   @db.VarChar(255)
+  DxR2txt              String?   @db.VarChar(255)
+  DxR3                 String?   @db.VarChar(255)
+  DxR3txt              String?   @db.VarChar(255)
+  OtrosDx              String?   @db.MediumText
+  Estado               String?   @db.VarChar(255)
+
+  @@index([NumeroHistoria], map: "NumeroHistoria")
+}
+
+model tablaconsultaspsiq {
+  id                           Int       @id @default(autoincrement())
+  NumeroHistoria               String?   @db.VarChar(255)
+  NumeroIdentificacion         String?   @db.VarChar(20)
+  CodigoEntidad                String?   @db.VarChar(255)
+  NumeroConsulta               String?   @db.VarChar(255)
+  FechaConsulta                DateTime? @db.DateTime(0)
+  MotivoConsulta               String?   @db.MediumText
+  EnfermedadActual             String?   @db.MediumText
+  AntecedentesEnfermedadActual String?   @db.MediumText
+  Actitud                      String?   @db.MediumText
+  Atencion                     String?   @db.MediumText
+  orientacion                  String?   @db.MediumText
+  TA                           String?   @db.VarChar(255)
+  FC                           String?   @db.VarChar(255)
+  FR                           String?   @db.VarChar(255)
+  temp                         String?   @db.VarChar(255)
+  Talla                        String?   @db.VarChar(255)
+  Peso                         String?   @db.VarChar(255)
+  memoria                      String?   @db.MediumText
+  sensopercepcion              String?   @db.MediumText
+  pensamiento                  String?   @db.MediumText
+  ejeI                         String?   @db.VarChar(400)
+  Secundario                   String?   @db.VarChar(400)
+  EjeII                        String?   @db.VarChar(400)
+  EjeIII                       String?   @db.VarChar(400)
+  EjeIV                        String?   @db.VarChar(400)
+  EjeV                         String?   @db.VarChar(255)
+  DxR3                         String?   @db.VarChar(255)
+  DxR3txt                      String?   @db.VarChar(255)
+  OtrosDx                      String?   @db.MediumText
+  inteligencia                 String?   @db.VarChar(255)
+  afecto                       String?   @db.Text
+  actividad                    String?   @db.Text
+  juicio                       String?   @db.Text
+  otros                        String?   @db.Text
+  estado                       String?   @db.VarChar(20)
+  examenfisico                 String?   @db.Text
+  plan                         String?   @db.Text
+  recomendaciones              String?   @db.Text
+  farmacologicos               String?   @db.Text
+  beck                         String?   @db.VarChar(50)
+  Hamilton                     String?   @db.VarChar(50)
+  Minimental                   String?   @db.VarChar(50)
+  dxpsicopatologico            String?   @db.Text
+  manifestacionesvitales       String?   @db.Text
+  laboratorios                 String?   @db.Text
+  descripcionejev              String?   @db.Text
+
+  @@index([NumeroHistoria], map: "NumeroHistoria")
+}
+
+model tablacontratos {
+  Id            Int       @id @default(autoincrement())
+  tipoContrato  Int?
+  SMLVD         String?   @db.VarChar(50)
+  CodigoEntidad String?   @db.VarChar(255)
+  NCtto         String?   @db.VarChar(255)
+  DescCtto      String?   @db.VarChar(255)
+  FechaIni      DateTime? @db.DateTime(0)
+  FechaFin      DateTime? @db.DateTime(0)
+  CentProd      String?   @db.VarChar(255)
+  Tarifa        String?   @db.VarChar(255)
+  Porcentaje    Float?
+  Ajuste        Float?
+  Formula       String?   @db.VarChar(255)
+  VerTarifa     String?   @db.VarChar(50)
+  CalculoPor    String?   @db.VarChar(4)
+  idtratante    String?   @db.VarChar(50)
+}
+
+model tablacontroles {
+  Id              Int       @id @default(autoincrement())
+  NumeroHistoria  String?   @db.VarChar(255)
+  NumeroConsulta  String?   @db.VarChar(50)
+  NumeroDocumento String?   @db.VarChar(255)
+  idRips          String?   @db.VarChar(10)
+  FechaControl    DateTime? @db.DateTime(0)
+  HoraControl     DateTime? @db.DateTime(0)
+  TA              String?   @db.VarChar(255)
+  FC              String?   @db.VarChar(255)
+  FR              String?   @db.VarChar(255)
+  Peso            String?   @db.VarChar(255)
+  Talla           String?   @db.VarChar(255)
+  textoControl    String?   @db.MediumText
+  IdMedico        String?   @db.VarChar(255)
+  Estado          String?   @db.VarChar(255)
+}
+
+model tablacprod {
+  Id     Int     @id @default(autoincrement())
+  CodCP  String? @db.VarChar(255)
+  DescCP String? @db.VarChar(255)
+}
+
+model tablactrlarchivohc {
+  Id                   Int       @id @default(autoincrement())
+  NumeroHistoria       String?   @db.VarChar(255)
+  NombrePaciente       String?   @db.VarChar(255)
+  FechaSalida          DateTime? @db.DateTime(0)
+  HoraSalida           DateTime? @db.DateTime(0)
+  EntregadoPor         String?   @db.VarChar(255)
+  ObservacionesSalida  String?   @db.VarChar(255)
+  FechaIngreso         DateTime? @db.DateTime(0)
+  HoraIngreso          DateTime? @db.DateTime(0)
+  RecibidoPor          String?   @db.VarChar(255)
+  ObservacionesIngreso String?   @db.VarChar(255)
+  Profesional          String?   @db.VarChar(255)
+
+  @@index([NumeroHistoria], map: "NumeroHistoria")
+}
+
+model tablactrlsolicitudcopia {
+  Id                Int       @id @default(autoincrement())
+  NumeroHistoria    String?   @db.VarChar(255)
+  NombreSolicitante String?   @db.VarChar(255)
+  FechaSolicitud    DateTime? @db.DateTime(0)
+  HoraSolicitud     DateTime? @db.DateTime(0)
+  FechaEntrega      DateTime? @db.DateTime(0)
+  HoraEntrega       DateTime? @db.DateTime(0)
+  Observaciones     String?   @db.VarChar(255)
+
+  @@index([NumeroHistoria], map: "NumeroHistoria")
+}
+
+model tablacups {
+  Id                 Int     @id @default(autoincrement())
+  Codigo             String? @unique(map: "Codigo") @db.VarChar(10)
+  Nombre             String? @db.VarChar(255)
+  Sexo               String? @db.VarChar(1)
+  Edad_ini           String? @db.VarChar(4)
+  Edad_fin           String? @db.VarChar(4)
+  archivo            String? @db.VarChar(3)
+  Qx                 String? @db.VarChar(1)
+  Tipo_procedimiento String? @db.VarChar(255)
+  No_minimo          String? @db.VarChar(2)
+  No_maximo          String? @db.VarChar(2)
+  Finalidad          String? @db.VarChar(2)
+  Dx_requerido       String? @db.VarChar(2)
+  Edad_Inicial_dias  String? @db.VarChar(10)
+  Edad_final_dias    String? @map("Edad-final-dias") @db.VarChar(10)
+  POS                String? @db.VarChar(1)
+  Favorito           Int?
+  Agregado           String? @db.VarChar(2)
+}
+
+model tabladiagnosticos {
+  Id          Int     @id @default(autoincrement())
+  IdDx        String? @unique(map: "IdDx") @db.VarChar(255)
+  Diagnostico String? @db.MediumText
+  Favorito    Int?
+}
+
+model tabladtosmunicipios {
+  Indexado             Int     @id @default(autoincrement())
+  CodigoDtoMunicipio   String? @db.VarChar(255)
+  DescripcionMunicipio String? @db.VarChar(255)
+  DescripcionDto       String? @db.VarChar(255)
+}
+
+model tablaencabezadosfa {
+  Id       Int     @id @default(autoincrement())
+  Texto1   String? @db.MediumText
+  Texto2   String? @db.MediumText
+  Texto3   String? @db.MediumText
+  Texto4   String? @db.MediumText
+  Texto5   String? @db.MediumText
+  Texto6   String? @db.MediumText
+  Texto7   String? @db.MediumText
+  IdMedico String? @db.VarChar(255)
+  Logo     Bytes?  @db.MediumBlob
+}
+
+model tablaencabezadoshc {
+  Id       Int     @id @default(autoincrement())
+  Texto1   String? @db.MediumText
+  Texto2   String? @db.MediumText
+  Texto3   String? @db.MediumText
+  Texto4   String? @db.MediumText
+  Texto5   String? @db.MediumText
+  Texto6   String? @db.MediumText
+  Texto7   String? @db.MediumText
+  IdMedico String? @db.VarChar(255)
+  Logo     Bytes?  @db.MediumBlob
+}
+
+model tablaencabezadosrp {
+  Id       Int     @id @default(autoincrement())
+  Texto1   String? @db.MediumText
+  Texto2   String? @db.MediumText
+  Texto3   String? @db.MediumText
+  Texto4   String? @db.MediumText
+  Texto5   String? @db.MediumText
+  Texto6   String? @db.MediumText
+  Texto7   String? @db.MediumText
+  IdMedico String? @db.VarChar(255)
+  Logo     Bytes?  @db.MediumBlob
+}
+
+model tablaentidades {
+  Indexado           Int     @id @default(autoincrement())
+  CodigoEntidad      String? @db.VarChar(255)
+  DescripcionEntidad String? @db.MediumText
+  Nit                String? @db.VarChar(50)
+  Direccion          String? @db.VarChar(255)
+  Telefonos          String? @db.VarChar(255)
+  NumeroDelContrato  String? @db.VarChar(15)
+  PlanBeneficios     String? @db.VarChar(30)
+  ConsecutivoFact    String? @db.VarChar(255)
+  MontoFijo          Float?
+  ValorConsulta      Float?
+  ValorProcedimiento Float?
+  TipoNumeracion     String? @db.VarChar(255)
+
+  @@index([CodigoEntidad], map: "CodigoEntidad")
+}
+
+model tablaeventos {
+  Id         Int     @id @default(autoincrement())
+  Eventos    String? @db.VarChar(255)
+  codigoCUPS String? @db.VarChar(50)
+  RIPS       String? @db.VarChar(50)
+
+  @@index([Id], map: "Id")
+}
+
+model tablaevoluciones {
+  Id              Int       @id @default(autoincrement())
+  NumeroIngreso   Int?
+  NumeroHistoria  String?   @db.VarChar(255)
+  NumeroEvolucion String?   @db.VarChar(255)
+  AreaTratante    String?   @db.VarChar(255)
+  IdTratante      String?   @db.VarChar(255)
+  NombreTratante  String?   @db.VarChar(255)
+  FechaEvolucion  DateTime? @db.DateTime(0)
+  HraEvolucion    DateTime? @db.DateTime(0)
+  Evolucion       String?   @db.MediumText
+  Habitacion      String?   @db.VarChar(255)
+  Cama            String?   @db.VarChar(255)
+  NumeroOrden     String?   @db.VarChar(10)
+}
+
+model tablaexamenes {
+  Id                Int     @id @default(autoincrement())
+  DescripcionExamen String? @db.VarChar(255)
+  NumeroHistoria    String? @db.VarChar(255)
+}
+
+model tablaexameneslab {
+  Id        Int     @id @default(autoincrement())
+  IdExamen  String? @db.VarChar(255)
+  Examen    String? @db.VarChar(255)
+  Resultado String? @db.MediumText
+}
+
+model tablaexamenesres {
+  Id             Int       @id @default(autoincrement())
+  IdExamen       Int?
+  NumeroHistoria String?   @db.VarChar(255)
+  FechaResultado DateTime? @db.DateTime(0)
+  Resultado      String?   @db.MediumText
+}
+
+model tablafestivos {
+  Id         Int     @id @default(autoincrement())
+  IdMedico   String  @db.Text
+  Dia        String? @db.VarChar(255)
+  Mes        String? @db.VarChar(255)
+  Festividad String? @db.VarChar(50)
+  A_o        Int?    @map("Año")
+}
+
+model tablafirmas {
+  Id             Int       @id @default(autoincrement())
+  FechaFirma     DateTime? @db.DateTime(0)
+  FirmaPaciente  String?   @db.MediumText
+  NumeroHistoria String?   @db.VarChar(255)
+}
+
+model tablaformatos {
+  id               Int     @id @default(autoincrement())
+  Plantilla        String? @db.VarChar(255)
+  APP              String? @db.MediumText
+  APMenor          String? @db.MediumText
+  RevisionSistemas String? @db.MediumText
+  ExamenFisico     String? @db.MediumText
+  plan             String? @db.MediumText
+  AyudasDx         String? @db.MediumText
+}
+
+model tablafurips {
+  Id                    Int     @id @default(autoincrement())
+  FechaRad              String? @db.VarChar(10)
+  RG                    String? @db.VarChar(1)
+  NRadicado             String? @db.VarChar(255)
+  NFactura              String? @db.VarChar(255)
+  RazonSocial           String? @db.VarChar(255)
+  CodHabilitacion       String? @db.VarChar(11)
+  NradicadoAnterior     String? @db.VarChar(255)
+  NIT                   String? @db.VarChar(255)
+  NDocumento            String? @db.VarChar(255)
+  Sexo                  String? @db.VarChar(255)
+  fechanacimiento       String? @db.VarChar(10)
+  NumeroDocumento       String? @db.VarChar(255)
+  CondicionAcc          String? @db.VarChar(255)
+  Telefono              String? @db.VarChar(255)
+  NaturalezaEvento      String? @db.VarChar(255)
+  OtrosNatEvent         String? @db.VarChar(18)
+  DireccionOcurrencia   String? @db.VarChar(33)
+  FechaEvento           String? @db.VarChar(10)
+  HoraEvento            String? @db.VarChar(5)
+  DtoMunicipioII        String? @db.VarChar(255)
+  ZU                    String? @db.VarChar(255)
+  CaracteristicasEvento String? @db.MediumText
+  EstadoAsegurado       String? @db.VarChar(255)
+  Marca                 String? @db.VarChar(255)
+  Placa                 String? @db.VarChar(6)
+  TipoServicio          String? @db.VarChar(255)
+  CodigoAseguradora     String? @db.VarChar(6)
+  NroPoliza             String? @db.VarChar(20)
+  VigenciaDesde         String? @db.VarChar(10)
+  VigenciaHasta         String? @db.VarChar(10)
+  IntervencioAut        String? @db.VarChar(2)
+  CobroExcedente        String? @db.VarChar(2)
+  erApellidoV           String? @map("1erApellidoV") @db.VarChar(255)
+  doApellidoV           String? @map("2doApellidoV") @db.VarChar(255)
+  erNombreV             String? @map("1erNombreV") @db.VarChar(255)
+  DoNombreV             String? @map("2DoNombreV") @db.VarChar(255)
+  TipoDocV              String? @db.VarChar(255)
+  NoDocV                String? @db.VarChar(16)
+  DireccionV            String? @db.VarChar(34)
+  CodDepMunV            String? @db.VarChar(255)
+  TelefonoV             String? @db.VarChar(11)
+  TotalFolio            String? @db.VarChar(3)
+  Habilitacion          String? @db.VarChar(255)
+  NITCC                 String? @db.VarChar(255)
+  PrimerApellidoVI      String? @db.VarChar(255)
+  SegundoApellidoVI     String? @db.VarChar(255)
+  PrimerNombreVI        String? @db.MediumText
+  SegundoNombreVI       String? @db.VarChar(255)
+  TipoDocVI             String? @db.VarChar(255)
+  NoDocVI               String? @db.VarChar(16)
+  DireccionVI           String? @db.VarChar(34)
+  CodigoDepMunVI        String? @db.VarChar(255)
+  TelefonoVI            String? @db.VarChar(15)
+  TipoReferencia        String? @db.VarChar(255)
+  FechaRemision         String? @db.VarChar(10)
+  HoraRemision          String? @db.VarChar(5)
+  PrestadorRemite       String? @db.VarChar(255)
+  CodInscripcionRemite  String? @db.VarChar(12)
+  ProfesionalRemite     String? @db.VarChar(255)
+  CargoProfesional      String? @db.VarChar(255)
+  FchaAceptacion        String? @db.VarChar(10)
+  HoraAceptacion        String? @db.VarChar(5)
+  PrestadorRecibe       String? @db.VarChar(255)
+  CodInscripcionRecibe  String? @db.VarChar(12)
+  ProfesionalRecibe     String? @db.VarChar(255)
+  CargoRecibe           String? @db.VarChar(255)
+  PlacaNum              String? @db.VarChar(6)
+  TransporteDesde       String? @db.VarChar(255)
+  TransporteHasta       String? @db.VarChar(255)
+  TipoTransporte        String? @db.VarChar(255)
+  ZUR                   String? @db.VarChar(255)
+  FechaIngreso          String? @db.VarChar(10)
+  HoraIngreso           String? @db.VarChar(5)
+  FechaEgreso           String? @db.VarChar(10)
+  HraEgreso             String? @db.VarChar(5)
+  DxEgreso              String? @db.VarChar(255)
+  Dx1Egreso             String? @db.VarChar(255)
+  Dx2Egreso             String? @db.VarChar(255)
+  DxIngreso             String? @db.VarChar(255)
+  Dx1Ingreso            String? @db.VarChar(255)
+  Dx2Ingreso            String? @db.VarChar(255)
+  erApellidoMed         String? @map("1erApellidoMed") @db.VarChar(255)
+  doApellidoMed         String? @map("2doApellidoMed") @db.VarChar(255)
+  erNombreMed           String? @map("1erNombreMed") @db.VarChar(255)
+  donombreMed           String? @map("2donombreMed") @db.VarChar(255)
+  TipoDocMed            String? @db.VarChar(255)
+  NumeroDocMed          String? @db.VarChar(16)
+  NumRegMed             String? @db.VarChar(16)
+  GastMQVT              String? @db.VarChar(255)
+  GastMQV               String? @db.VarChar(255)
+  GastTransVT           String? @db.VarChar(255)
+  GastTransVR           String? @db.VarChar(255)
+  NumeroRadicado        String? @db.VarChar(255)
+  NumeroDocumentoI      String? @db.VarChar(255)
+  CargoEspecialidad     String? @db.VarChar(255)
+  NumeroHistoria        String? @db.VarChar(255)
+  CuentaCobro           String? @db.VarChar(20)
+  TipoEvento            String? @db.VarChar(10)
+  Soat                  String? @db.VarChar(50)
+  Insumos               String? @db.VarChar(200)
+  Cantidad              Int?
+  VUnitario             Int?
+  VTreclamadoFos        Int?
+}
+
+model tablaimagenes {
+  id             Int       @id @default(autoincrement())
+  NumeroHistoria String?   @db.VarChar(255)
+  NumeroConsulta String?   @db.VarChar(255)
+  NumGrpImg      String?   @db.VarChar(255)
+  FechaGrpIMG    DateTime? @db.Date
+  PathImg1       String?   @db.MediumText
+  PathImg2       String?   @db.MediumText
+  PathImg3       String?   @db.MediumText
+  PathImg4       String?   @db.MediumText
+  PathImg5       String?   @db.MediumText
+  PathImg6       String?   @db.MediumText
+  PathImg7       String?   @db.MediumText
+  PathImg8       String?   @db.MediumText
+  Observaciones  String?   @db.MediumText
+  TxTImg1        String?   @db.MediumText
+  TxTImg2        String?   @db.MediumText
+  TxTImg3        String?   @db.MediumText
+  TxTImg4        String?   @db.MediumText
+  TxTImg5        String?   @db.MediumText
+  TxTImg6        String?   @db.MediumText
+  TxTImg7        String?   @db.MediumText
+  TxTImg8        String?   @db.MediumText
+  imgRUO1        String?   @db.VarChar(255)
+  imgRUO2        String?   @db.VarChar(255)
+  imgETV1        String?   @db.VarChar(255)
+  imgETV2        String?   @db.VarChar(255)
+  imgRUOF1       String?   @db.VarChar(255)
+  imgRUOF2       String?   @db.VarChar(255)
+  imgRUOF3       String?   @db.VarChar(255)
+  imgRUOF4       String?   @db.VarChar(255)
+  imgRUOF5       String?   @db.VarChar(255)
+  imgRUOF6       String?   @db.VarChar(255)
+  FechaImg1      DateTime? @db.Date
+  FechaImg2      DateTime? @db.Date
+  FechaImg3      DateTime? @db.Date
+  FechaImg4      DateTime? @db.Date
+  FechaInforme   DateTime? @db.Date
+  NumeroInforme  String?   @db.Char(20)
+  GrupoImagenes  String?   @db.Char(20)
+  PathIm1        String?   @db.Text
+  PathIm2        String?   @db.Text
+  PathIm3        String?   @db.Text
+  PathIm4        String?   @db.Text
+  PathIm5        String?   @db.Text
+  PathIm6        String?   @db.Text
+
+  @@index([NumeroHistoria], map: "NumeroHistoria")
+}
+
+model tablainformes {
+  id              Int       @id @default(autoincrement())
+  NumeroHistoria  String?   @db.VarChar(255)
+  FechaInforme    DateTime? @db.DateTime(0)
+  NumInforme      String?   @db.VarChar(255)
+  numerodocumento String?   @db.VarChar(255)
+  codigoentidad   String?   @db.VarChar(255)
+  TextoInforme    String?   @db.MediumText
+  IdPrestador     String?   @db.VarChar(255)
+  IdMedico        String?   @db.VarChar(255)
+  tipoInforme     String?   @db.VarChar(255)
+  archivocorte    String?   @db.VarChar(255)
+  estado          String?   @db.VarChar(255)
+}
+
+model tablainsttipoex {
+  Id          Int     @id @default(autoincrement())
+  Instrumento String? @db.VarChar(255)
+  TipoExamen  String? @db.VarChar(255)
+}
+
+model tablalistadoproccontratos {
+  Id                 Int     @id @default(autoincrement())
+  NCtto              String? @db.VarChar(255)
+  CodProcedimiento   String? @db.VarChar(255)
+  Descripcion        String? @db.VarChar(255)
+  CodEntidad         String? @db.VarChar(255)
+  ValorProcedimiento Float?
+  IdTratante         String? @db.VarChar(255)
+}
+
+model tablamedicamentos {
+  Id               Int     @id @default(autoincrement())
+  NomMedicamentos  String? @db.VarChar(50)
+  PrincipioAct     String? @db.LongText
+  Medida           String? @db.VarChar(50)
+  CantidadMedicada String? @db.VarChar(50)
+  Posolog_a        String? @map("Posología") @db.MediumText
+}
+
+model tablamedicamentosrecetados {
+  Id                 Int     @id @default(autoincrement())
+  IdReceta           Int?
+  NumeroHistoria     String? @db.VarChar(255)
+  NomMedicamentos    String? @db.VarChar(250)
+  Medida             String? @db.VarChar(50)
+  CantidadMedicada   String? @db.VarChar(50)
+  Posolog_a          String? @map("Posología") @db.MediumText
+  mgxkg              String? @db.VarChar(255)
+  mg                 String? @db.VarChar(255)
+  ml                 String? @db.VarChar(255)
+  AlDia              String? @db.VarChar(255)
+  Tipo               String? @db.VarChar(255)
+  TempNumeroReceta   String? @db.VarChar(255)
+  TempNumeroConsulta String? @db.VarChar(255)
+  idMedico           String? @db.VarChar(50)
+  idPrestador        String? @db.VarChar(50)
+}
+
+model tablameses {
+  Id        Int     @id @default(autoincrement())
+  DiaN      Int?
+  DiaNombre String? @db.VarChar(255)
+}
+
+model tablanasofibro {
+  id              Int       @id @default(autoincrement())
+  NumeroHistoria  String?   @db.VarChar(255)
+  NumeroDocumento String?   @db.VarChar(255)
+  FechaAtencion   DateTime? @db.DateTime(0)
+  NumeroInforme   String?   @db.VarChar(255)
+  FosasNasales    String?   @db.MediumText
+  Cornetes        String?   @db.MediumText
+  SeptumNasal     String?   @db.MediumText
+  Meatos          String?   @db.MediumText
+  Coanas          String?   @db.MediumText
+  Nasofaringe     String?   @db.MediumText
+  Orofaringe      String?   @db.MediumText
+  Hipofaringe     String?   @db.MediumText
+  Laringe         String?   @db.MediumText
+  Supraglotis     String?   @db.MediumText
+  Glotis          String?   @db.MediumText
+  SubGlotis       String?   @db.MediumText
+  Diagnostico     String?   @db.MediumText
+  Plan            String?   @db.MediumText
+  SenosPiriformes String?   @db.MediumText
+  CuerdasVocales  String?   @db.MediumText
+  BVentriculares  String?   @db.MediumText
+  Valecula        String?   @db.MediumText
+  PathImg1        String?   @db.MediumText
+  PathImg2        String?   @db.MediumText
+  VFTC            String?   @db.MediumText
+  TipoInforme     String?   @db.VarChar(255)
+  PathImg3        String?   @db.MediumText
+  PathImg4        String?   @db.MediumText
+  Descripcion     String?   @db.MediumText
+  idMedico        String?   @db.VarChar(50)
+  idPrestador     String?   @db.VarChar(50)
+  estado          String?   @db.VarChar(30)
+}
+
+model tablanotasenfermeria {
+  Id              Int       @id @default(autoincrement())
+  NumeroHistoria  String?   @db.VarChar(255)
+  NumeroConsulta  String?   @db.VarChar(50)
+  NumeroDocumento String?   @db.VarChar(255)
+  idRips          String?   @db.VarChar(10)
+  FechaControl    DateTime? @db.DateTime(0)
+  HoraControl     DateTime? @db.DateTime(0)
+  TA              String?   @db.VarChar(255)
+  FC              String?   @db.VarChar(255)
+  FR              String?   @db.VarChar(255)
+  Peso            String?   @db.VarChar(255)
+  Talla           String?   @db.VarChar(255)
+  textoControl    String?   @db.MediumText
+  IdMedico        String?   @db.VarChar(255)
+  Estado          String?   @db.VarChar(255)
+  tipo            String?   @db.VarChar(255)
+  IdPrestador     String?   @db.VarChar(255)
+
+  @@index([NumeroHistoria], map: "NumeroHistoria")
+}
+
+model tablaocupaciones {
+  Id          Int     @id @default(autoincrement())
+  Ocupaciones String? @db.VarChar(255)
+}
+
+model tablaotrosenc {
+  id         Int     @id @default(autoincrement())
+  CodEntidad String? @db.VarChar(255)
+  Historia   String? @db.VarChar(255)
+  Receta     String? @db.VarChar(255)
+}
+
+model tablaplantillas {
+  id           Int     @id @default(autoincrement())
+  Plantilla    String? @db.VarChar(255)
+  RP           String? @db.MediumText
+  INDICACIONES String? @db.MediumText
+}
+
+model tablaplantillasinf {
+  id             Int     @id @default(autoincrement())
+  plantilla      String? @db.VarChar(255)
+  textoplantilla String? @db.MediumText
+  archivocorte   String? @db.VarChar(255)
+}
+
+model tablaplantillasnaso {
+  indice         Int     @id @default(autoincrement())
+  CODIGO         Int?
+  NOMBRE         String? @db.VarChar(150)
+  DESCRIPCION    String? @db.MediumText
+  Complicaciones String? @db.MediumText
+  idMedico       String? @db.VarChar(50)
+}
+
+model tablarecetas {
+  Id              Int       @id @default(autoincrement())
+  NumeroHistoria  String?   @db.VarChar(255)
+  NumeroDocumento String?   @db.VarChar(255)
+  NumeroConsulta  String?   @db.VarChar(255)
+  NumeroReceta    String?   @db.VarChar(255)
+  FechaReceta     DateTime? @db.DateTime(0)
+  RP              String?   @db.MediumText
+  Indicaciones    String?   @db.MediumText
+  PROXIMACITA     String?   @db.VarChar(50)
+  dx              String?   @db.MediumText
+  idMedico        String?   @db.VarChar(50)
+  IdPrestador     String?   @db.VarChar(50)
+}
+
+model tablaremisiones {
+  Id                    Int       @id @default(autoincrement())
+  NumeroRemision        String?   @db.VarChar(255)
+  ResponsablePaciente   String?   @db.VarChar(255)
+  DireccionResponsable  String?   @db.VarChar(255)
+  ParentescoResponsable String?   @db.VarChar(255)
+  TelefonoResponsable   String?   @db.VarChar(255)
+  FechaRemision         DateTime? @db.DateTime(0)
+  ServicioAlCualRemite  String?   @db.VarChar(255)
+  NumeroHistoria        String?   @db.VarChar(255)
+  Ordenamiento          String?   @db.MediumText
+  Remitente             String?   @db.VarChar(255)
+  ServicioRemitido      String?   @db.VarChar(255)
+}
+
+model tablaresexameneslab {
+  Id             Int       @id @default(autoincrement())
+  NumeroHistoria String?   @db.VarChar(255)
+  Idexamen       String?   @db.VarChar(255)
+  Resultado      String?   @db.MediumText
+  FechaExamen    DateTime? @db.DateTime(0)
+  PathImg        String?   @db.MediumText
+}
+
+model tablaripsconsultas {
+  id                 Int       @id @default(autoincrement())
+  NumeroHistoria     String?   @db.VarChar(255)
+  NumFactura         Int?
+  IdMedico           String?   @db.VarChar(50)
+  CodigoMedico       String?   @db.VarChar(255)
+  CodigoEntidad      String?   @db.VarChar(255)
+  TipoIdentificacion String?   @db.VarChar(2)
+  NumeroDocumento    String?   @db.VarChar(255)
+  Fecha              DateTime? @db.DateTime(0)
+  FechaIni           DateTime? @db.DateTime(0)
+  FechaFin           DateTime? @db.DateTime(0)
+  NumAutorizacion    String?   @db.VarChar(15)
+  CodConsulta        String?   @db.VarChar(8)
+  FinalidadConsulta  String?   @db.VarChar(2)
+  CausaExterna       String?   @db.VarChar(2)
+  DxPrincipal        String?   @db.VarChar(4)
+  DxRel1             String?   @db.VarChar(4)
+  DxRel2             String?   @db.VarChar(4)
+  DxRel3             String?   @db.VarChar(4)
+  TipoDxPrincipal    String?   @db.VarChar(1)
+  ValorC             Float?
+  ValorCuotaMod      Float?
+  ValorNeto          Float?
+  Orden              Int?
+  CodigoProfesional  String?   @db.VarChar(255)
+  Area               String?   @db.VarChar(255)
+  TipoUsuario        String?   @db.MediumText
+  UnidadMedidaEdad   Int?
+  Edad               Int?
+  Estadofactura      String?   @db.VarChar(255)
+  Turno              Int?
+  IdRips             String?   @db.VarChar(40)
+}
+
+model tablaripsmedico {
+  Id              Int     @id @default(autoincrement())
+  CodigoMedico    String? @db.VarChar(255)
+  NombreMedico    String? @db.VarChar(255)
+  TipoDocumento   String? @db.VarChar(255)
+  NumeroDocumento String? @db.VarChar(255)
+  CodEspecialidad String? @db.VarChar(255)
+}
+
+model tablaripsproc {
+  Id                         Int       @id @default(autoincrement())
+  IdProcedimiento            String?   @db.VarChar(50)
+  Turno                      Int?
+  IdTemp                     Int?
+  NumeroHistoria             String?   @db.VarChar(255)
+  CodigoEntidad              String?   @db.VarChar(10)
+  CodigoEntidadAfil          String?   @db.VarChar(50)
+  TipoIdentificacion         String?   @db.VarChar(2)
+  NumeroDocumento            String?   @db.VarChar(20)
+  Fecha                      DateTime? @db.Date
+  FechaIni                   DateTime? @db.Date
+  FechaFin                   DateTime? @db.Date
+  AmbitoRealizaProcedimiento String?   @db.VarChar(1)
+  FinalidadProcedimiento     String?   @db.VarChar(1)
+  PersonalQatiende           String?   @db.VarChar(1)
+  DxPrincipal                String?   @db.VarChar(4)
+  DxRelacionado              String?   @db.VarChar(4)
+  Complicacion               String?   @db.VarChar(4)
+  FormaRealizQx              String?   @db.VarChar(1)
+  IdMedico                   String?   @db.VarChar(255)
+  CodigoMedico               String?   @db.VarChar(255)
+  NombreMedico               String?   @db.VarChar(255)
+  CodigoProfesional          String?   @db.VarChar(255)
+  Area                       String?   @db.VarChar(255)
+  Tipousuario                Decimal?  @db.Decimal(2, 0)
+  NumeroIdUsr                String?   @db.VarChar(255)
+  UnidadMedidaEdad           Int?
+  Edad                       Int?
+  EstadoFactura              String?   @db.VarChar(255)
+  NumContrato                String?   @db.MediumText
+  CentProd                   String?   @db.VarChar(10)
+  EstadoProc                 String?   @db.VarChar(20)
+  TipoGrpFactura             String?   @db.VarChar(2)
+  Consecutivo                Int?
+  finalidadconsulta          String?   @db.VarChar(10)
+  CausaExterna               String?   @db.VarChar(10)
+  tipodxprincipal            String?   @db.VarChar(10)
+  dxrel1                     String?   @db.VarChar(10)
+  dxrel2                     String?   @db.VarChar(10)
+  dxrel3                     String?   @db.VarChar(10)
+  SedeCodigoEntidad          String?   @db.VarChar(250)
+}
+
+model tablaripsprocdet {
+  Id               Int     @id @default(autoincrement())
+  IdTemp           Int?
+  IdRIPS           String? @db.VarChar(50)
+  NumeroHistoria   String? @db.VarChar(255)
+  prefijo          String? @db.VarChar(10)
+  NumFactura       Int?
+  NumAutorizacion  String? @db.VarChar(15)
+  CodProcedimiento String? @db.VarChar(8)
+  Orden            Int?
+  Cantidad         Float?
+  ValorUnitario    Float?
+  VUCuotaMod       Float?
+  Archivo          String? @db.VarChar(10)
+  idprocedimiento  String? @db.VarChar(100)
+  soat             String? @db.VarChar(50)
+  iss              String? @db.VarChar(50)
+  NumContrato      String? @db.VarChar(50)
+  centprod         String? @db.VarChar(50)
+  EstadoFactura    String? @db.VarChar(5)
+
+  @@index([NumFactura], map: "NumFactura")
+  @@index([NumeroHistoria], map: "NumeroHistoria")
+}
+
+model tablaripsprocedimientos {
+  Id                         Int       @id @default(autoincrement())
+  NumeroHistoria             String?   @db.VarChar(255)
+  NumFactura                 Int?
+  CodigoEntidad              String?   @db.VarChar(10)
+  TipoIdentificacion         String?   @db.VarChar(2)
+  NumeroDocumento            String?   @db.VarChar(20)
+  Fecha                      DateTime? @db.DateTime(0)
+  NumAutorizacion            String?   @db.VarChar(15)
+  CodProcedimiento           String?   @db.VarChar(8)
+  AmbitoRealizaProcedimiento String?   @db.VarChar(1)
+  FinalidadProcedimiento     String?   @db.VarChar(1)
+  PersonalQatiende           String?   @db.VarChar(1)
+  DxPrincipal                String?   @db.VarChar(4)
+  DxRelacionado              String?   @db.VarChar(4)
+  Complicacion               String?   @db.VarChar(4)
+  FormaRealizQx              String?   @db.VarChar(1)
+  ValorP                     Float?
+  ValorCuotaMod              Float?
+  ValorNeto                  Float?
+  IdMedico                   String?   @db.VarChar(255)
+  CodigoMedico               String    @db.VarChar(255)
+  NombreMedico               String    @db.VarChar(255)
+  Orden                      Int?
+  CodigoProfesional          String?   @db.VarChar(255)
+  Area                       String?   @db.VarChar(255)
+  Tipousuario                String?   @db.VarChar(255)
+  NumeroIdUsr                String?   @db.VarChar(255)
+  CodigoProfesional1         String?   @db.VarChar(255)
+  Turno                      Float?
+  UnidadMedidaEdad           Int
+  Edad                       Int
+  EstadoFactura              String    @db.VarChar(255)
+}
+
+model tablarutas {
+  Id            Int     @id
+  RutaImg       String? @db.MediumText
+  RutaProgramas String? @db.MediumText
+  RutaUpdates   String? @db.MediumText
+  RutaAnexos    String? @db.LongText
+  PathFirmas    String? @db.LongText
+}
+
+model tablasedesentidades {
+  Id              Int     @id @default(autoincrement())
+  DescripcionSede String? @db.VarChar(255)
+  CodigoEntidad   String? @db.VarChar(255)
+}
+
+model tablasesiones {
+  id             Int       @id @default(autoincrement())
+  fechasesion    DateTime? @db.Date
+  Evolucion      String?   @db.MediumText
+  NumeroHistoria String?   @db.VarChar(255)
+  NumeroConsulta String?   @db.VarChar(255)
+  NumeroTerapia  String?   @db.VarChar(255)
+  ImpresionDx    String?   @db.VarChar(250)
+
+  @@index([NumeroHistoria], map: "NumeroHistoria")
+}
+
+model tablasetup {
+  Index        Int     @id @default(autoincrement())
+  PathSvr      String  @db.LongText
+  PathMedia    String  @db.LongText
+  PathPrg      String  @db.LongText
+  diasctrlFree Int?
+  RutaImg      String? @db.LongText
+  RutaPrg      String? @db.LongText
+  RutaTmp      String? @db.LongText
+  RutaAnexos   String? @db.LongText
+}
+
+model tablasolicitudes {
+  id          Int     @id @default(autoincrement())
+  Descripcion String? @db.VarChar(255)
+}
+
+model tablatarifarios {
+  Id          Int      @id @default(autoincrement())
+  CodTarifa   String?  @db.VarChar(255)
+  Year_Tarifa String?  @db.VarChar(255)
+  COD_SER     String?  @db.VarChar(255)
+  Val_Ser     Decimal? @db.Decimal(11, 2)
+  Pun_Ser     Decimal? @db.Decimal(11, 6)
+  Des_Serv    String?  @db.VarChar(255)
+  MARCA       String?  @db.VarChar(10)
+  qx          String?  @db.VarChar(2)
+}
+
+model tablatipoconsultas {
+  Id              Int     @id @default(autoincrement())
+  CodTipoConsulta String? @db.VarChar(6)
+  TipoConsulta    String? @db.VarChar(255)
+
+  @@index([CodTipoConsulta], map: "CodTipoConsulta")
+}
+
+model tablatipousuario {
+  CodigoTipoUsuario      String  @id @default("") @db.VarChar(255)
+  DescripcionTipoUsuario String? @db.VarChar(255)
+}
+
+model tablatxtfactura {
+  id           Int     @id @default(autoincrement())
+  TextoFactura String? @db.Text
+}
+
+model tablausuarios {
+  id              Int     @id @default(autoincrement())
+  Usuario         String? @db.VarChar(255)
+  Clave           String? @db.VarChar(255)
+  Tipo            String? @db.VarChar(255)
+  PrimerNombre    String? @db.VarChar(255)
+  SegundoNombre   String? @db.VarChar(255)
+  PrimeroApellido String? @db.VarChar(255)
+  SegundoApellido String? @db.VarChar(255)
+  Area            String? @db.VarChar(255)
+  NumeroDocumento String? @db.VarChar(255)
+  Modulos         String? @db.MediumText
+  Profesion       String? @db.MediumText
+  Codigo          String? @db.VarChar(50)
+  PathFirma       String? @db.MediumText
+  PathFoto        String? @db.MediumText
+  rm              String? @db.VarChar(20)
+}
+
+model tblhc {
+  Id                          Int       @id @default(autoincrement())
+  NumeroHistoria              String?   @unique(map: "NumeroHistoria") @db.VarChar(20)
+  TipoIdentificacion          String?   @db.VarChar(2)
+  NumeroIdentificacion        String?   @unique(map: "NumeroIdentificacion") @db.VarChar(20)
+  CodigoEntidad               String?   @db.VarChar(10)
+  TipoUsuario                 String?   @db.VarChar(1)
+  PrimerApellido              String?   @db.VarChar(30)
+  SegundoApellido             String?   @db.VarChar(30)
+  PrimerNombre                String?   @db.VarChar(20)
+  SegundoNombre               String?   @db.VarChar(20)
+  Edad                        String?   @db.VarChar(3)
+  UnidadMedidaEdad            String?   @db.VarChar(1)
+  Sexo                        String?   @db.VarChar(1)
+  CodigoDepartamentoMunicipio String?   @db.VarChar(255)
+  ZonaResidencia              String?   @db.VarChar(1)
+  FechaNacimiento             DateTime? @db.DateTime(0)
+  Direccion                   String?   @db.VarChar(255)
+  Telefonos                   String?   @db.VarChar(255)
+  LugarNacimiento             String?   @db.VarChar(255)
+  EC                          String?   @db.VarChar(255)
+  FechaHistoria               DateTime? @db.DateTime(0)
+  Notas                       String?   @db.MediumText
+  APF                         String?   @db.MediumText
+  Habitos                     String?   @db.MediumText
+  Medicos                     String?   @db.MediumText
+  Traumaticos                 String?   @db.MediumText
+  Quirurgicos                 String?   @db.MediumText
+  Toxicos                     String?   @db.MediumText
+  Alergicos                   String?   @db.MediumText
+  Ginecologicos               String?   @db.MediumText
+  Obstetricos                 String?   @db.MediumText
+  Inmunologicos               String?   @db.MediumText
+  Ocupacionales               String?   @db.MediumText
+  APP                         String?   @db.MediumText
+  Usuario                     String?   @db.VarChar(255)
+  HoraIngreso                 DateTime? @db.DateTime(0)
+  PathImg1                    String?   @db.MediumText
+  Estrato                     String?   @db.Text
+  Ocupacion                   String?   @db.Text
+  Turno                       Int?
+  FechaUltimaConsulta         DateTime? @db.DateTime(0)
+  Area                        String?   @db.Text
+  IdMedico                    String?   @db.VarChar(50)
+  M                           String?   @db.VarChar(3)
+  FUM                         String?   @db.VarChar(20)
+  MPLANIFICA                  String?   @db.VarChar(50)
+  Gestaciones                 String?   @db.VarChar(3)
+  Partos                      String?   @db.VarChar(3)
+  Abortos                     String?   @db.VarChar(3)
+  Cesareas                    String?   @db.VarChar(3)
+  etopicos                    String?   @db.VarChar(3)
+  Observaciones               String?   @db.LongText
+  vivos                       String?   @db.VarChar(3)
+  Odontologicos               String?   @db.Text
+  prenatales                  String?   @db.Text
+  perinatales                 String?   @db.Text
+  atabaquico                  String?   @db.Text
+  alaborales                  String?   @db.Text
+  Acompa_ante                 String?   @map("Acompañante") @db.Char(150)
+  Parentezco                  String?   @db.Char(150)
+  SedeCodigoEntidad           String?   @db.Char(150)
+}
