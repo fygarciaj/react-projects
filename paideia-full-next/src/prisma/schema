@@ -4,23 +4,23 @@ datasource db {
 }
 
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-3.0.x", "linux-arm64-openssl-1.1.x", "rhel-openssl-3.0.x"]
+  provider        = "prisma-client-js"
+  binaryTargets   = ["native", "debian-openssl-3.0.x", "linux-arm64-openssl-1.1.x", "rhel-openssl-3.0.x"]
 }
 
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -53,8 +53,8 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-model Appointment {
-  id              String   @id @default(cuid())
-  dateAppointment DateTime
-  documentNumber  String
+
+model Appointment{
+  id  String @id @default(cuid())
+
 }
