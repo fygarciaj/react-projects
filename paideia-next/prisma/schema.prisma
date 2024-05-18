@@ -545,8 +545,8 @@ model PhonesPatient {
   phone_id   String    @db.Char(26)
   created_at DateTime? @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
-  patients   patients  @relation(fields: [patient_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "phones_patients_patient_id_foreign")
-  phones     phones    @relation(fields: [phone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "phones_patients_phone_id_foreign")
+  patient    Patient  @relation(fields: [patient_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "phones_patients_patient_id_foreign")
+  phone      Phone    @relation(fields: [phone_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "phones_patients_phone_id_foreign")
 
   @@index([patient_id], map: "phones_patients_patient_id_foreign")
   @@index([phone_id], map: "phones_patients_phone_id_foreign")
@@ -1120,12 +1120,8 @@ model tblnotas {
   Nota String?   @db.VarChar(255)
 }
 
-model tblnumeros {
-  Id     Int  @id @default(autoincrement())
-  Numero Int? @db.TinyInt
-}
 
-model tblsantoral {
+model Santoral {
   Id         Int     @id @default(autoincrement())
   Dia        Int?    @db.TinyInt
   Mes        Int?    @db.TinyInt
@@ -1139,12 +1135,12 @@ model team_invitations {
   role       String?   @db.VarChar(255)
   created_at DateTime? @db.Timestamp(0)
   updated_at DateTime? @db.Timestamp(0)
-  teams      teams     @relation(fields: [team_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "team_invitations_team_id_foreign")
+  teams      Team      @relation(fields: [team_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "team_invitations_team_id_foreign")
 
   @@unique([team_id, email], map: "team_invitations_team_id_email_unique")
 }
 
-model team_user {
+model TeamUser {
   id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
   team_id    BigInt    @db.UnsignedBigInt
   user_id    BigInt    @db.UnsignedBigInt
@@ -1162,7 +1158,7 @@ model Team {
   personal_team    Boolean
   created_at       DateTime?          @db.Timestamp(0)
   updated_at       DateTime?          @db.Timestamp(0)
-  team_invitations team_invitations[]
+  team_invitations TeamInvitation[]
 
   @@index([user_id], map: "teams_user_id_index")
 }
@@ -1173,7 +1169,7 @@ model UserType {
   deleted_at DateTime?  @db.Timestamp(0)
   created_at DateTime?  @db.Timestamp(0)
   updated_at DateTime?  @db.Timestamp(0)
-  patients   patients[]
+  patient   Patient[]
 }
 
 model User {
@@ -1198,23 +1194,23 @@ enum appointment_events_rendering {
   inverse_background @map("inverse-background")
 }
 
-enum patients_measure_age {
-  // 1 @map("1")
-  // 2 @map("2")
-  // 3 @map("3")
+enum PatientMeasureAge {
+  Dias // 1 @map("1")
+  Meses// 2 @map("2")
+  Anios // 3 @map("3")
 }
 
-enum patients_genre {
+enum PatientGenre {
   F
   M
 }
 
-enum patients_home_area {
+enum PatientHomeArea {
   U
   R
 }
 
-enum consultations_estado {
+enum ConsultationsStatus {
   Scheduled
   Attended
   Post_Scheduled @map("Post-Scheduled")
