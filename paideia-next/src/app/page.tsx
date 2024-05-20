@@ -1,5 +1,5 @@
 import { Typography } from "@mui/material";
-import AppointmentForToday from "./appointment/page";
+import AppointmentForToday from "./appointment/components/AppointmentForToday";
 
 export default function Home() {
   return (
