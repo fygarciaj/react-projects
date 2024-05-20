@@ -3,7 +3,9 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import {
   Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Paper, Select, MenuItem, FormControl, InputLabel, TextField
+  TableHead, TableRow, Paper, Select, MenuItem, FormControl, InputLabel, TextField,
+  Box,
+  Typography
 } from '@mui/material';
 
 
@@ -12,6 +14,7 @@ function AppointmentForToday() {
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedDoctor, setSelectedDoctor] = useState('');
   const [doctors, setDoctors] = useState([]);
+  const [doctorName, setDoctorName] = useState('')
 
   useEffect(() => {
     const today = new Date().toISOString().split('T')[0];
@@ -29,6 +32,7 @@ function AppointmentForToday() {
   const handleDoctorChange = (event) => {
     const newDoctor = event.target.value;
     setSelectedDoctor(newDoctor);
+    setDoctorName(newDoctor.NombreMedico);
     fetchAppointments(selectedDate, newDoctor);
   };
 
@@ -66,13 +70,21 @@ function AppointmentForToday() {
 
 
   return (
-    <>
-      <FormControl fullWidth>
+    <Box
+      component="form"
+      sx={{
+        '& .MuiTextField-root': { m: 1, width: '25ch' },
+      }}
+      noValidate
+      autoComplete="off"
+    >
+      <FormControl variant="standard" fullWidth>
         <TextField
           id="date"
           label="Fecha de Cita"
           type="date"
           value={selectedDate}
+          variant="standard"
           onChange={handleDateChange}
           InputLabelProps={{
             shrink: true,
@@ -80,7 +92,7 @@ function AppointmentForToday() {
           fullWidth
         />
       </FormControl>
-      <FormControl fullWidth margin="normal">
+      <FormControl fullWidth margin="normal" variant="standard">
         <InputLabel id="doctor-select-label">Doctor</InputLabel>
         <Select
           labelId="doctor-select-label"
@@ -98,6 +110,9 @@ function AppointmentForToday() {
           ))}
         </Select>
       </FormControl>
+      <Typography>
+        { doctorName }
+      </Typography>
       <TableContainer component={Paper} style={{ marginTop: '20px' }}>
         <Table aria-label="simple table">
           <TableHead>
@@ -126,14 +141,13 @@ function AppointmentForToday() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={4}>No hay citas para esta fecha.</TableCell>
+                <TableCell colSpan={7}>No hay citas para esta fecha.</TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
       </TableContainer>
-
-    </>
+    </Box>
   );
 }
 
