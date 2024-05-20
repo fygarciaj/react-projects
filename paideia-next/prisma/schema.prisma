@@ -9,7 +9,7 @@ datasource db {
 
 model AppointmentEvent {
   id               String                       @id @default(uuid())
-  appointmentId    String
+  appointmentId    String                       @unique
   appointment      Appointment                  @relation(fields: [appointmentId], references: [id])
   title            String                       @unique @db.VarChar(255)
   allDay           Boolean                      @default(false)
@@ -31,9 +31,9 @@ model AppointmentEvent {
   textColor        String                       @default("#000") @db.VarChar(255)
   clinicId         String?                      @default("1") @db.Char(26)
   uuid             String                       @unique(map: "appointment_events_uuid_unique") @db.Char(26)
-  deleted_at       DateTime?                    @db.Timestamp(0)
-  created_at       DateTime?                    @db.Timestamp(0)
-  updated_at       DateTime?                    @db.Timestamp(0)
+  deletedAt        DateTime?                    @db.Timestamp(0)
+  createdAt        DateTime?                    @db.Timestamp(0)
+  updatedAt        DateTime?                    @db.Timestamp(0)
   // Relation 1-1 with patient
   patientId        String
   patient          Patient                      @relation(fields: [patientId], references: [id])
@@ -45,18 +45,20 @@ model AppointmentEvent {
 }
 
 model AppointmentState {
-  id        String    @id @default(uuid())
-  state     String    @unique() @db.VarChar(255)
-  createdAt DateTime? @default(now())
-  updatedAt DateTime? @db.Timestamp(0)
+  id            String       @id @default(uuid())
+  state         String       @unique() @db.VarChar(255)
+  createdAt     DateTime?    @default(now())
+  updatedAt     DateTime?    @db.Timestamp(0)
+  Appointment   Appointment? @relation(fields: [appointmentId], references: [id])
+  appointmentId String?
 
   @@index([id])
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model Appointment {
-  id                     String                 @id @default()
-  appointment_date       DateTime               @default(now())
+  id                     String                 @id @default(uuid())
+  appointmentDate        DateTime               @default(now())
   event                  AppointmentEvent?
   patient                Patient[]
   consultationId         BigInt?                @db.UnsignedBigInt
@@ -79,24 +81,23 @@ model Appointment {
   updatedAt              DateTime?              @db.Timestamp(0)
 
   @@index([id])
-  @@index([appointment_date])
-  @@index([patientId])
+  @@index([appointmentDate])
 }
 
 model Category {
-  id         String    @id @default(uuid())
-  name       String    @unique() @db.VarChar(255)
-  createdAt  DateTime  @default(now())
-  updated_at DateTime? @db.Timestamp(0)
+  id        String    @id @default(uuid())
+  name      String    @unique() @db.VarChar(255)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @db.Timestamp(0)
 
   @@index([id])
 }
 
 model City {
-  id               String    @id @db.Char(26)
+  id               String    @id @default(uuid())
   dptoCode         String    @db.VarChar(2)
   cityCode         String    @db.VarChar(5)
-  centerPeopleCode String    @unique(map: "cities_center_people_code_unique") @db.VarChar(8)
+  centerPeopleCode String    @unique() @db.VarChar(8)
   dptoName         String    @db.VarChar(100)
   cityName         String    @db.VarChar(100)
   centerPeopleName String    @db.VarChar(100)
@@ -109,7 +110,7 @@ model City {
   @@index([id])
   @@index([centerPeopleName])
   @@index([cityCode])
-  @@index([cityCame])
+  @@index([cityName])
   @@index([dptoCode])
   @@index([dptoName])
 }
@@ -126,78 +127,79 @@ model Clinic {
   deletedAt            DateTime? @default(now())
   createdAt            DateTime? @db.Timestamp(0)
   updatedAt            DateTime? @db.Timestamp(0)
-  cities               City?     @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "clinics_cityId_foreign")
+  cities               City?     @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   patients             Patient[]
 
   @@index([cityId])
 }
 
 model Consultation {
-  id                      String               @id @default(uuid())
-  consultationDate        DateTime             @db.DateTime(0)
-  attentionDate           DateTime             @db.DateTime(0)
-  patientId               String               @db.Char(26)
-  factureId               Int                  @db.UnsignedInt
-  cupsId                  String               @db.Char(26)
-  autoritation            String               @db.VarChar(255)
-  consultationMotiv       String               @db.Text
-  questionsInterest       String               @db.Text
-  antecedentes            String               @db.Text
-  physicalExam            String               @db.Text
-  temperature             Decimal              @db.Decimal(3, 1)
-  arterialTension_TA      String               @db.VarChar(255)
+  id                      String        @id @default(uuid())
+  consultationDate        DateTime      @db.DateTime(0)
+  attentionDate           DateTime      @db.DateTime(0)
+  patientId               String        @db.Char(26)
+  factureId               Int           @db.UnsignedInt
+  cupsId                  String        @db.Char(26)
+  autoritation            String        @db.VarChar(255)
+  consultationMotiv       String        @db.Text
+  questionsInterest       String        @db.Text
+  antecedentes            String        @db.Text
+  physicalExam            String        @db.Text
+  temperature             Decimal       @db.Decimal(3, 1)
+  arterialTension_TA      String        @db.VarChar(255)
   heartRate_FC            Int
   lungFrequency_FP        Int
   respiratoryFrequency_FR Int
   size_T                  Int
-  weight                  String               @db.VarChar(255)
-  head                    String               @db.Text
-  orl                     String               @db.Text
-  neck                    String               @db.Text
-  thorax                  String               @db.Text
-  lungs                   String               @db.Text
-  headVesselsBlood        String               @db.Text
-  abdomen                 String               @db.Text
-  genitalia               String               @db.Text
-  musculoSkeletal         String               @db.Text
-  nervousSystem          String               @db.Text
-  externalCauseId        String               @db.VarChar(255)
-  dxMainId                Int                  @db.UnsignedInt
-  dxRelacted1Id           Int?                 @db.UnsignedInt
-  dxRelated2Id            Int?                 @db.UnsignedInt
-  dxRelated3Id            Int?                 @db.UnsignedInt
-  dxMainTypeId           Int                  @db.UnsignedInt
-  consultationValue      Decimal              @db.Decimal(15, 3)
-  moderatorQuota         Decimal              @db.Decimal(15, 3)
-  status                  consultations_estado
-  deletedAt              DateTime?            @db.Timestamp(now())
-  createdAt              DateTime?            @db.Timestamp(0)
-  updatedAt              DateTime?            @db.Timestamp(0)
-  cups                    cups                 @relation(fields: [cupsId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "consultations_cupsId_foreign")
-  patients                patients             @relation(fields: [patientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "consultations_patientId_foreign")
+  weight                  String        @db.VarChar(255)
+  head                    String        @db.Text
+  orl                     String        @db.Text
+  neck                    String        @db.Text
+  thorax                  String        @db.Text
+  lungs                   String        @db.Text
+  headVesselsBlood        String        @db.Text
+  abdomen                 String        @db.Text
+  genitalia               String        @db.Text
+  musculoSkeletal         String        @db.Text
+  nervousSystem           String        @db.Text
+  externalCauseId         String        @db.VarChar(255)
+  dxMainId                Int           @db.UnsignedInt
+  dxRelacted1Id           Int?          @db.UnsignedInt
+  dxRelated2Id            Int?          @db.UnsignedInt
+  dxRelated3Id            Int?          @db.UnsignedInt
+  dxMainTypeId            Int           @db.UnsignedInt
+  consultationValue       Decimal       @db.Decimal(15, 3)
+  moderatorQuota          Decimal       @db.Decimal(15, 3)
+  status                  ConsultaState
+  deletedAt               DateTime?     @default(now())
+  createdAt               DateTime?     @db.Timestamp(0)
+  updatedAt               DateTime?     @db.Timestamp(0)
+  cups                    Cups          @relation(fields: [cupsId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "consultations_cupsId_foreign")
+  patients                Patient       @relation(fields: [patientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "consultations_patientId_foreign")
 
-  @@index([attention_date])
+  @@index([attentionDate])
   @@index([autoritation])
-  @@index([consultation_date])
+  @@index([consultationDate])
   @@index([cupsId])
   @@index([dxMainId])
   @@index([dxRelacted1Id])
   @@index([dxRelated2Id])
-  @@index([dxrelated3Id])
+  @@index([dxRelated3Id])
   @@index([externalCauseId])
   @@index([factureId])
   @@index([patientId])
 }
 
 model Cups {
-  id             String    @id @default(uuid())
-  code           String    @unique() @db.Char(6)
-  description    String    @db.VarChar(255)
-  value          Decimal?  @db.Decimal(15, 3)
+  id             String         @id @default(uuid())
+  code           String         @unique() @db.Char(6)
+  description    String         @db.VarChar(255)
+  value          Decimal?       @db.Decimal(15, 3)
   isConsultation Boolean
-  deletedAt      DateTime? @db.Timestamp(now())
-  createdAt      DateTime? @db.Timestamp(0)
-  updatedAt      DateTime? @db.Timestamp(0)
+  deletedAt      DateTime?      @default(now())
+  createdAt      DateTime?      @db.Timestamp(0)
+  updatedAt      DateTime?      @db.Timestamp(0)
+  Consultation   Consultation[]
 
   @@index([id])
   @@index([code])
@@ -205,52 +207,53 @@ model Cups {
 }
 
 model Doctor {
-  id                   String    @id @default(uuid())
+  id                   String            @id @default(uuid())
   identificationTypeId String
-  identification       String    @unique @db.VarChar(255)
-  doctorCode           String    @unique @db.VarChar(255)
-  firstName            String    @db.VarChar(255)
-  secondName           String?   @db.VarChar(255)
-  firstSurname         String    @db.VarChar(255)
-  secondSurname        String?   @db.VarChar(255)
-  email                String?   @unique @db.VarChar(255)
-  professionalCard     String    @unique @db.VarChar(255)
-  movil1               String?   @db.VarChar(255)
-  movil2               String?   @db.VarChar(255)
-  receiveNotifications Boolean   @default(true)
-  active               Boolean   @default(true)
-  deletedAt            DateTime? @db.Timestamp(0)
-  createdAt            DateTime? @db.Timestamp(0)
-  updatedAt            DateTime? @db.Timestamp(0)
+  identification       String            @unique @db.VarChar(255)
+  doctorCode           String            @unique @db.VarChar(255)
+  firstName            String            @db.VarChar(255)
+  secondName           String?           @db.VarChar(255)
+  firstSurname         String            @db.VarChar(255)
+  secondSurname        String?           @db.VarChar(255)
+  email                String?           @unique @db.VarChar(255)
+  professionalCard     String            @unique @db.VarChar(255)
+  movil1               String?           @db.VarChar(255)
+  movil2               String?           @db.VarChar(255)
+  receiveNotifications Boolean           @default(true)
+  active               Boolean           @default(true)
+  deletedAt            DateTime?         @db.Timestamp(0)
+  createdAt            DateTime?         @db.Timestamp(0)
+  updatedAt            DateTime?         @db.Timestamp(0)
+  DoctorSpecialty      DoctorSpecialty[]
 }
 
 model Specialty {
-  id               String             @id @default(uuid())
-  name             String             @unique() @db.VarChar(255)
-  deletedAt        DateTime?          @db.Timestamp(0)
-  createdAt        DateTime?          @db.Timestamp(0)
-  updatedAt        DateTime?          @db.Timestamp(0)
-  doctor_specialty doctor_specialty[]
+  id              String            @id @default(uuid())
+  name            String            @unique() @db.VarChar(255)
+  doctorSpecialty DoctorSpecialty[]
+  deletedAt       DateTime?         @db.Timestamp(0)
+  createdAt       DateTime?         @db.Timestamp(0)
+  updatedAt       DateTime?         @db.Timestamp(0)
 
-  @@index([uuid], map: "specialties_uuid_index")
+  @@index([id])
 }
 
 model DoctorSpecialty {
-  id          String      @id @db.Char(26)
-  specialtyId String      @db.Char(26)
-  doctorId    String      @db.Char(26)
-  created_at  DateTime?   @db.Timestamp(0)
-  updated_at  DateTime?   @db.Timestamp(0)
-  doctor      Doctor      @relation(fields: [doctorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "doctor_specialty_doctorId_foreign")
-  specialties specialties @relation(fields: [specialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "doctor_specialty_specialtyId_foreign")
+  id          String    @id @default(uuid())
+  specialtyId String    @db.Char(26)
+  doctorId    String    @db.Char(26)
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @db.Timestamp(0)
+  doctor      Doctor    @relation(fields: [doctorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "doctor_specialty_doctorId_foreign")
+  specialties Specialty @relation(fields: [specialtyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "doctor_specialty_specialtyId_foreign")
 
-  @@index([doctorId], map: "doctor_specialty_doctorId_foreign")
-  @@index([specialtyId], map: "doctor_specialty_specialtyId_foreign")
+  @@index([doctorId])
+  @@index([specialtyId])
 }
 
 model Enterprise {
-  Id                   String    @id @db.Char(26)
-  tipoIdentificacionId BigInt    @db.UnsignedBigInt
+  id                   String    @id @default(uuid())
+  tipoIdentificacionId String
   numeroIdentificacion String    @unique(map: "empresas_numeroIdentificacion_unique") @db.VarChar(255)
   nombre_empresa       String    @unique(map: "empresas_nombre_empresa_unique") @db.VarChar(255)
   direccion            String?   @db.VarChar(255)
@@ -259,291 +262,293 @@ model Enterprise {
   prefijo_factura      String    @default("") @db.VarChar(255)
   consecutivo_factura  BigInt    @default(1)
   codigo_entidad       BigInt
-  uuid                 String    @unique(map: "empresas_uuid_unique") @db.Char(26)
-  deleted_at           DateTime? @db.Timestamp(0)
-  created_at           DateTime? @db.Timestamp(0)
-  updated_at           DateTime? @db.Timestamp(0)
+  deletedAt            DateTime? @db.Timestamp(0)
+  createdAt            DateTime? @default(now())
+  updatedAt            DateTime? @db.Timestamp(0)
 }
 
-model encreportes {
-  Id          Int       @id @default(autoincrement())
-  TITULO1     String?   @db.MediumText
-  TITULO2     String?   @db.MediumText
-  TITULO3     String?   @db.MediumText
-  TEXTO       String?   @db.MediumText
-  ENTIDAD     String?   @db.MediumText
-  TipoInforme String?   @db.MediumText
-  Fecha       DateTime? @db.DateTime(0)
-  IdMedico    String?   @db.VarChar(255)
+model ReportPrint {
+  id         String    @id @default(uuid())
+  title1     String?   @db.MediumText
+  title2     String?   @db.MediumText
+  title3     String?   @db.MediumText
+  text       String?   @db.MediumText
+  entities   String?   @db.MediumText
+  reportType String?   @db.MediumText
+  reportDate DateTime? @db.DateTime(0)
+  doctor     String?
 }
 
 model ExternalCause {
-  Id         String    @id @db.Char(26)
-  code       String    @unique(map: "external_causes_code_unique") @db.VarChar(2)
-  name       String    @unique(map: "external_causes_name_unique") @db.VarChar(60)
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
-}
-
-model failed_jobs {
-  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
-  uuid       String   @unique(map: "failed_jobs_uuid_unique") @db.VarChar(255)
-  connection String   @db.Text
-  queue      String   @db.Text
-  payload    String   @db.LongText
-  exception  String   @db.LongText
-  failed_at  DateTime @default(now()) @db.Timestamp(0)
+  id        String    @id @default(uuid())
+  code      String    @unique() @db.VarChar(2)
+  name      String    @unique() @db.VarChar(60)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @db.Timestamp(0)
 }
 
 /// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
 model HealtProviderCompany {
-  Id                         String          @id @db.Char(26)
-  identification_number      String          @unique(map: "healt_provider_companiesIdentification_number_unique") @db.VarChar(255)
-  name                       String          @unique(map: "healt_provider_companies_name_unique") @db.VarChar(255)
-  city                       String?         @db.VarChar(255)
-  address                    String?         @db.VarChar(255)
-  phone                      String?         @db.VarChar(255)
-  days_for_payment           Int             @default(0)
-  copayment                  Decimal         @default(0.00) @db.Decimal(8, 2)
-  expiration                 Int             @default(0)
-  payment_methodId           String          @db.Char(26)
-  is_healt_provider_company  Boolean         @default(true)
-  codigo_prestadora          String?         @db.VarChar(255)
-  moderator_quota            Decimal         @default(0.00) @db.Decimal(8, 2)
-  with_copayment             Boolean         @default(false)
-  with_moderador             Boolean         @default(false)
-  with_advance_payment       Boolean         @default(false)
-  with_moderator_anticipated Boolean         @default(false)
-  contract                   String?         @db.VarChar(255)
-  identification_count_cobro String?         @db.VarChar(255)
-  active                     Boolean         @default(true)
-  deleted_at                 DateTime?       @db.Timestamp(0)
-  created_at                 DateTime?       @db.Timestamp(0)
-  updated_at                 DateTime?       @db.Timestamp(0)
-  payment_methods            payment_methods @relation(fields: [payment_methodId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "healt_provider_companies_payment_methodId_foreign")
-  patients                   patients[]
+  id                       String        @id @default(uuid())
+  identificationNumber     String        @unique() @db.VarChar(255)
+  name                     String        @unique() @db.VarChar(255)
+  citie                    String?
+  address                  String?
+  phone                    String?
+  daysForPayment           Int           @default(0)
+  copayment                Decimal       @default(0.00) @db.Decimal(8, 2)
+  expiration               Int           @default(0)
+  paymentMethodId          String        @db.Char(26)
+  isHealtProviderCompany   Boolean       @default(true)
+  codigoPrestadora         String?       @db.VarChar(255)
+  moderatorQuota           Decimal       @default(0.00) @db.Decimal(8, 2)
+  withCopayment            Boolean       @default(false)
+  withModerador            Boolean       @default(false)
+  withAdvancePayment       Boolean       @default(false)
+  withModeratorAnticipated Boolean       @default(false)
+  contract                 String?       @db.VarChar(255)
+  identificationCountCobro String?       @db.VarChar(255)
+  active                   Boolean       @default(true)
+  deletedAt                DateTime?     @db.Timestamp(0)
+  createdAt                DateTime?     @default(now())
+  updatedAt                DateTime?     @db.Timestamp(0)
+  paymentMethod            PaymentMethod @relation(fields: [paymentMethodId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "healt_provider_companies_payment_methodId_foreign")
+  patient                  Patient[]
+  Appointment              Appointment?  @relation(fields: [appointmentId], references: [id])
+  appointmentId            String?
 
-  @@index([address], map: "healt_provider_companies_address_index")
-  @@index([codigo_prestadora], map: "healt_provider_companies_codigo_prestadora_index")
-  @@index([payment_methodId], map: "healt_provider_companies_payment_methodId_foreign")
+  @@index([id])
+  @@index([identificationNumber])
+  @@index([address])
+  @@index([codigoPrestadora])
+  @@index([paymentMethodId])
 }
 
 model IdentificationType {
-  Id         String     @id @db.Char(26)
-  code       String     @unique(map: "identification_types_code_unique") @db.Char(3)
-  name       String     @unique(map: "identification_types_name_unique") @db.VarChar(255)
-  deleted_at DateTime?  @db.Timestamp(0)
-  created_at DateTime?  @db.Timestamp(0)
-  updated_at DateTime?  @db.Timestamp(0)
-  patients   patients[]
+  id        String    @id @default(uuid())
+  code      String    @unique() @db.Char(3)
+  name      String    @unique() @db.VarChar(255)
+  deletedAt DateTime? @db.Timestamp(0)
+  createdAt DateTime? @db.Timestamp(0)
+  updatedAt DateTime? @db.Timestamp(0)
+  patient   Patient[]
 }
 
 model InstitutionProviderServices {
-  Id                        String    @id @db.Char(26)
-  identification_typeId     String    @db.Char(26)
-  ips_code                  String    @unique(map: "institution_provider_services_ips_code_unique") @db.VarChar(10)
-  nit_ips                   String?   @db.VarChar(20)
-  name                      String    @unique(map: "institution_provider_services_name_unique") @db.VarChar(60)
-  cityId                    String?   @default("2587") @db.Char(26)
-  address                   String?   @db.VarChar(255)
-  phone                     String?   @db.VarChar(255)
-  term                      Int       @default(0)
-  copayment                 Decimal   @default(0.00) @db.Decimal(8, 2)
-  expire                    Int       @default(0)
-  payment_methodId          String    @default("1") @db.Char(26)
-  is_healt_provider_service Boolean   @default(true)
-  active                    Boolean   @default(true)
-  codigo_prestadora         String?   @db.VarChar(255)
-  moderator_fee             Decimal   @default(0.00) @db.Decimal(8, 2)
-  charges_copayment         Boolean   @default(false)
-  charges_moderator         Boolean   @default(false)
-  advance_copayment         Boolean   @default(false)
-  advance_moderator         Boolean   @default(false)
-  contrat                   String?   @db.VarChar(255)
-  nit_count_charges         String?   @db.VarChar(255)
-  uuid                      String    @db.Char(26)
-  deleted_at                DateTime? @db.Timestamp(0)
-  created_at                DateTime? @db.Timestamp(0)
-  updated_at                DateTime? @db.Timestamp(0)
+  id                     String    @id @default(uuid())
+  identificationTypeId   String    @db.Char(26)
+  ipsCode                String    @unique() @db.VarChar(10)
+  nitIps                 String?   @db.VarChar(20)
+  name                   String    @unique() @db.VarChar(60)
+  cityId                 String?   @default("2587") @db.Char(26)
+  address                String?   @db.VarChar(255)
+  phone                  String?   @db.VarChar(255)
+  term                   Int       @default(0)
+  copayment              Decimal   @default(0.00) @db.Decimal(8, 2)
+  expire                 Int       @default(0)
+  paymentMethodId        String    @default("1") @db.Char(26)
+  isHealtProviderService Boolean   @default(true)
+  active                 Boolean   @default(true)
+  codigoPrestadora       String?   @db.VarChar(255)
+  moderatorFee           Decimal   @default(0.00) @db.Decimal(8, 2)
+  chargesCopayment       Boolean   @default(false)
+  chargesCoderator       Boolean   @default(false)
+  advanceCopayment       Boolean   @default(false)
+  advanceModerator       Boolean   @default(false)
+  contrat                String?   @db.VarChar(255)
+  nitCountCharges        String?   @db.VarChar(255)
+  deletedAt              DateTime? @db.Timestamp(0)
+  createdAt              DateTime? @default(now())
+  updatedAt              DateTime? @db.Timestamp(0)
 
-  @@index([address], map: "institution_provider_services_address_index")
-  @@index([codigo_prestadora], map: "institution_provider_services_codigo_prestadora_index")
-  @@index([uuid], map: "institution_provider_services_uuid_index")
+  @@index([id])
+  @@index([address])
+  @@index([codigoPrestadora])
 }
 
 model MaritalStatus {
-  Id         String     @id @db.Char(26)
-  code       String     @db.VarChar(255)
-  name       String     @unique(map: "marital_statuses_name_unique") @db.VarChar(255)
-  deleted_at DateTime?  @db.Timestamp(0)
-  created_at DateTime?  @db.Timestamp(0)
-  updated_at DateTime?  @db.Timestamp(0)
-  patients   patients[]
+  id        String    @id @default(uuid())
+  code      String    @db.VarChar(255)
+  name      String    @unique() @db.VarChar(255)
+  deletedAt DateTime? @db.Timestamp(0)
+  createdAt DateTime? @db.Timestamp(0)
+  updatedAt DateTime? @db.Timestamp(0)
+  patient   Patient[]
+
+  @@index([id])
+  @@index([code])
 }
 
 model Media {
-  Id                    BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  model_type            String    @db.VarChar(255)
-  modelId               BigInt    @db.UnsignedBigInt
-  uuid                  String?   @unique(map: "media_uuid_unique") @db.Char(36)
-  collection_name       String    @db.VarChar(255)
-  name                  String    @db.VarChar(255)
-  file_name             String    @db.VarChar(255)
-  mime_type             String?   @db.VarChar(255)
-  disk                  String    @db.VarChar(255)
-  conversions_disk      String?   @db.VarChar(255)
-  size                  BigInt    @db.UnsignedBigInt
-  manipulations         Json
-  custom_properties     Json
-  generated_conversions Json
-  responsive_images     Json
-  order_column          Int?      @db.UnsignedInt
-  created_at            DateTime? @db.Timestamp(0)
-  updated_at            DateTime? @db.Timestamp(0)
+  id                   String    @id @default(uuid())
+  modelType            String    @db.VarChar(255)
+  modelId              BigInt    @db.UnsignedBigInt
+  collectionName       String    @db.VarChar(255)
+  name                 String    @db.VarChar(255)
+  fileName             String    @db.VarChar(255)
+  mimeType             String?   @db.VarChar(255)
+  disk                 String    @db.VarChar(255)
+  conversionsDisk      String?   @db.VarChar(255)
+  size                 BigInt    @db.UnsignedBigInt
+  manipulations        Json
+  customProperties     Json
+  generatedConversions Json
+  responsiveImages     Json
+  orderColumn          Int?      @db.UnsignedInt
+  createdAt            DateTime? @db.Timestamp(0)
+  updatedAt            DateTime? @db.Timestamp(0)
 
-  @@index([model_type, modelId], map: "media_model_type_modelId_index")
-  @@index([order_column], map: "media_order_column_index")
+  @@index([modelType, modelId])
+  @@index([orderColumn])
 }
 
 model Occupation {
-  Id                     String     @id @db.Char(26)
-  ciuo_code              String     @db.Char(4)
-  occupation_description String     @unique(map: "occupations_occupation_description_unique") @db.VarChar(255)
-  risk                   Int        @default(1)
-  deleted_at             DateTime?  @db.Timestamp(0)
-  created_at             DateTime?  @db.Timestamp(0)
-  updated_at             DateTime?  @db.Timestamp(0)
-  patients               patients[]
+  id                    String    @id @default(uuid())
+  ciuoCode              String    @db.Char(4)
+  occupationDescription String    @unique() @db.VarChar(255)
+  risk                  Int       @default(1)
+  deletedAt             DateTime? @db.Timestamp(0)
+  createdAt             DateTime? @default(now())
+  updatedAt             DateTime? @db.Timestamp(0)
+  patient               Patient[]
 
-  @@index([ciuo_code], map: "occupations_ciuo_code_index")
+  @@index([id])
+  @@index([ciuoCode])
 }
 
 model Office {
-  Id                    String    @id @db.Char(26)
-  names                 String    @unique(map: "offices_names_unique") @db.VarChar(255)
-  identification_number String    @unique(map: "officesIdentification_number_unique") @db.VarChar(255)
-  address               String    @db.VarChar(255)
-  phone                 String    @db.VarChar(255)
-  cityId                String    @db.Char(26)
-  regimen               String    @db.VarChar(255)
-  ceo_office            String    @db.VarChar(255)
-  created_at            DateTime? @db.Timestamp(0)
-  updated_at            DateTime? @db.Timestamp(0)
-  cities                cities    @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "offices_cityId_foreign")
+  id                   String    @id @default(uuid())
+  names                String    @unique() @db.VarChar(255)
+  identificationNumber String    @unique() @db.VarChar(255)
+  address              String    @db.VarChar(255)
+  phone                String    @db.VarChar(255)
+  cityId               String    @db.Char(26)
+  regimen              String    @db.VarChar(255)
+  ceoOffice            String    @db.VarChar(255)
+  createdAt            DateTime? @db.Timestamp(0)
+  updatedAt            DateTime? @db.Timestamp(0)
+  cities               City[]
 
-  @@index([cityId], map: "offices_cityId_foreign")
+  @@index([id])
+  @@index([cityId])
 }
 
 model Patient {
-  Id                       String                   @id @db.Char(26)
-  identification_typeId    String                   @db.Char(26)
-  identification_number    String                   @unique(map: "patientsIdentification_number_unique") @db.VarChar(20)
-  first_surname            String                   @db.VarChar(30)
-  second_surname           String?                  @db.VarChar(30)
-  first_name               String                   @db.VarChar(30)
-  second_name              String?                  @db.VarChar(30)
-  full_name                String?                  @db.VarChar(150)
-  healt_provider_companyId String                   @db.Char(26)
-  user_typeId              String                   @db.Char(26)
-  affiliate_typeId         String                   @db.Char(26)
-  father                   String?                  @db.VarChar(255)
-  mother                   String?                  @db.VarChar(255)
-  companion                String?                  @db.VarChar(255)
-  marital_statusId         String                   @db.Char(26)
-  occupationId             String                   @db.Char(26)
-  date_birth               DateTime?                @default(dbgenerated("'1900-01-01'")) @db.Date
-  measure_age              Int?                     @default(dbgenerated("1"))
-  genre                    PatientGenre
-  home_area                PatientHomeArea
-  cityId                   String                   @db.Char(26)
-  email                    String?                  @db.VarChar(100)
-  contact                  String?                  @db.VarChar(100)
-  active                   Boolean?                 @default(true)
-  clinicId                 String                   @db.Char(26)
-  observations             String?                  @db.Text
-  deleted_at               DateTime?                @db.Timestamp(0)
-  created_at               DateTime?                @db.Timestamp(0)
-  updated_at               DateTime?                @db.Timestamp(0)
-  address_patients         address_patients[]
-  consultations            consultations[]
-  affiliate_types          affiliate_types          @relation(fields: [affiliate_typeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "patients_affiliate_typeId_foreign")
-  cities                   cities                   @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "patients_cityId_foreign")
-  clinics                  clinics                  @relation(fields: [clinicId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "patients_clinicId_foreign")
-  healt_provider_companies healt_provider_companies @relation(fields: [healt_provider_companyId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "patients_healt_provider_companyId_foreign")
-  identification_types     identification_types     @relation(fields: [identification_typeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "patientsIdentification_typeId_foreign")
-  marital_statuses         marital_statuses         @relation(fields: [marital_statusId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "patients_marital_statusId_foreign")
-  occupations              occupations              @relation(fields: [occupationId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "patients_occupationId_foreign")
-  user_types               user_types               @relation(fields: [user_typeId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "patients_user_typeId_foreign")
-  phones_patients          phones_patients[]
+  id                     String                @id @default(uuid())
+  identificationTypeId   String                @db.Char(26)
+  identificationNumber   String                @unique() @db.VarChar(20)
+  firstSurname           String                @db.VarChar(30)
+  secondSurname          String?               @db.VarChar(30)
+  firstName              String                @db.VarChar(30)
+  secondName             String?               @db.VarChar(30)
+  fullName               String?               @db.VarChar(150)
+  healtProviderCompanyId String                @db.Char(26)
+  userTypeId             String                @db.Char(26)
+  affiliateTypeId        String                @db.Char(26)
+  father                 String?               @db.VarChar(255)
+  mother                 String?               @db.VarChar(255)
+  companion              String?               @db.VarChar(255)
+  maritalStatusId        String                @db.Char(26)
+  occupationId           String                @db.Char(26)
+  dateBirth              DateTime?             @default(dbgenerated("'1900-01-01'")) @db.Date
+  measureAge             Int?                  @default(dbgenerated("1"))
+  genre                  PatientGenre
+  homeArea               PatientHomeArea
+  cityId                 String                @db.Char(26)
+  email                  String?               @db.VarChar(100)
+  contact                String?               @db.VarChar(100)
+  active                 Boolean?              @default(true)
+  clinicId               String                @db.Char(26)
+  observations           String?               @db.Text
+  addressPatient         AdrressesOfPatients[]
+  consultations          Consultation[]
+  affiliateType          AffiliateType         @relation(fields: [affiliateTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  cities                 City                  @relation(fields: [cityId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  clinics                Clinic                @relation(fields: [clinicId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  healtProviderCompany   HealtProviderCompany  @relation(fields: [healtProviderCompanyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  identificationType     IdentificationType    @relation(fields: [identificationTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  maritalStatus          MaritalStatus         @relation(fields: [maritalStatusId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  occupations            Occupation            @relation(fields: [occupationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userType               UserType              @relation(fields: [userTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  phonePatient           PhonePatient[]
+  AppointmentEvent       AppointmentEvent[]
+  Appointment            Appointment?          @relation(fields: [appointmentId], references: [id])
+  appointmentId          String?
+  deletedAt              DateTime?             @db.Timestamp(0)
+  createdAt              DateTime?             @default(now())
+  updatedAt              DateTime?             @db.Timestamp(0)
 
-  @@index([affiliate_typeId], map: "patients_affiliate_typeId_foreign")
-  @@index([cityId], map: "patients_cityId_foreign")
-  @@index([clinicId], map: "patients_clinicId_foreign")
-  @@index([healt_provider_companyId], map: "patients_healt_provider_companyId_foreign")
-  @@index([identification_typeId], map: "patientsIdentification_typeId_foreign")
-  @@index([marital_statusId], map: "patients_marital_statusId_foreign")
-  @@index([occupationId], map: "patients_occupationId_foreign")
-  @@index([user_typeId], map: "patients_user_typeId_foreign")
+  @@index([id])
+  @@index([affiliateTypeId])
+  @@index([cityId])
+  @@index([clinicId])
+  @@index([healtProviderCompanyId])
+  @@index([identificationTypeId])
+  @@index([maritalStatusId])
+  @@index([occupationId])
+  @@index([userTypeId])
 }
 
 model PaymentMethod {
-  Id                       String                     @id @db.Char(26)
-  name                     String                     @db.VarChar(255)
-  expire_days              Int                        @default(0)
-  deleted_at               DateTime?                  @db.Timestamp(0)
-  created_at               DateTime?                  @db.Timestamp(0)
-  updated_at               DateTime?                  @db.Timestamp(0)
-  healt_provider_companies healt_provider_companies[]
+  id                   String                 @id @default(uuid())
+  name                 String                 @db.VarChar(255)
+  expirationDays       Int                    @default(0)
+  deletedAt            DateTime?              @db.Timestamp(0)
+  createdAt            DateTime?              @default(now())
+  updatedAt            DateTime?              @db.Timestamp(0)
+  HealtProviderCompany HealtProviderCompany[]
 }
 
 model PersonalAccessToken {
-  id             BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  tokenable_type String    @db.VarChar(255)
-  tokenableId    BigInt    @db.UnsignedBigInt
-  name           String    @db.VarChar(255)
-  token          String    @unique(map: "personal_access_tokens_token_unique") @db.VarChar(64)
-  abilities      String?   @db.Text
-  last_used_at   DateTime? @db.Timestamp(0)
-  expires_at     DateTime? @db.Timestamp(0)
-  created_at     DateTime? @db.Timestamp(0)
-  updated_at     DateTime? @db.Timestamp(0)
+  id            String    @id @default(uuid())
+  tokenableType String    @db.VarChar(255)
+  tokenableId   BigInt    @db.UnsignedBigInt
+  name          String    @db.VarChar(255)
+  token         String    @unique() @db.VarChar(64)
+  abilities     String?   @db.Text
+  lastUsedAt    DateTime? @db.Timestamp(0)
+  expiresAt     DateTime? @db.Timestamp(0)
+  createdAt     DateTime? @db.Timestamp(0)
+  updatedAt     DateTime? @db.Timestamp(0)
 
-  @@index([tokenable_type, tokenableId], map: "personal_access_tokens_tokenable_type_tokenableId_index")
+  @@index([tokenableType, tokenableId])
 }
 
 model Phone {
-  Id              String            @id @db.Char(26)
-  number          String            @db.VarChar(255)
-  deleted_at      DateTime?         @db.Timestamp(0)
-  created_at      DateTime?         @db.Timestamp(0)
-  updated_at      DateTime?         @db.Timestamp(0)
-  phones_patients phones_patients[]
+  id            String         @id @default(uuid())
+  number        String         @db.VarChar(255)
+  deletedAt     DateTime?      @db.Timestamp(0)
+  createdAt     DateTime?      @db.Timestamp(0)
+  updatedAt     DateTime?      @db.Timestamp(0)
+  phonesPatient PhonePatient[]
 }
 
-model PhonesPatient {
-  Id         String    @id @db.Char(26)
-  patientId  String    @db.Char(26)
-  phoneId    String    @db.Char(26)
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
-  patient    Patient   @relation(fields: [patientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "phones_patients_patientId_foreign")
-  phone      Phone     @relation(fields: [phoneId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "phones_patients_phoneId_foreign")
+model PhonePatient {
+  id        String    @id @default(uuid())
+  patientId String    @db.Char(26)
+  phoneId   String    @db.Char(26)
+  deletedAt DateTime? @db.Timestamp(0)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @db.Timestamp(0)
+  patient   Patient   @relation(fields: [patientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "phones_patients_patientId_foreign")
+  phone     Phone     @relation(fields: [phoneId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "phones_patients_phoneId_foreign")
 
-  @@index([patientId], map: "phones_patients_patientId_foreign")
-  @@index([phoneId], map: "phones_patients_phoneId_foreign")
+  @@index([id])
+  @@index([patientId])
+  @@index([phoneId])
 }
 
 model Products {
-  Id         String    @id @db.Char(26)
-  name       String    @unique(map: "products_name_unique") @db.VarChar(255)
-  cost       Decimal?  @db.Decimal(15, 3)
-  price      Decimal   @default(0.000) @db.Decimal(15, 3)
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
+  id        String    @id @default(uuid())
+  name      String    @unique() @db.VarChar(255)
+  cost      Decimal?  @db.Decimal(15, 3)
+  price     Decimal   @default(0.000) @db.Decimal(15, 3)
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @db.Timestamp(0)
 }
 
 model Sessions {
-  id            String  @id @db.VarChar(255)
+  id            String  @id @default(uuid())
   userId        BigInt? @db.UnsignedBigInt
   ip_address    String? @db.VarChar(45)
   user_agent    String? @db.Text
@@ -1023,137 +1028,40 @@ model tablaripsprocedimientos {
   @@index([NumeroHistoria], map: "NumeroHistoria")
 }
 
-model tablarutas {
-  Id            Int     @id @default(autoincrement())
-  RutaTablasHC1 String? @db.MediumText
-  RutaTablasHC2 String? @db.VarChar(255)
-}
-
 model tablasedesentidades {
-  Id              Int     @id @default(0)
-  DescripcionSede String? @db.VarChar(255)
-  CodigoEntidad   String? @db.VarChar(255)
-}
-
-model tablausuarios {
-  Index           Int     @id @default(autoincrement())
-  Usuario         String? @db.VarChar(255)
-  Clave           String? @db.VarChar(255)
-  Tipo            String? @db.VarChar(255)
-  PrimerNombre    String? @db.VarChar(255)
-  SegundoNombre   String? @db.VarChar(255)
-  PrimeroApellido String? @db.VarChar(255)
-  SegundoApellido String? @db.VarChar(255)
-  Area            String? @db.VarChar(255)
-  NumeroDocumento String? @db.VarChar(255)
-  Modulos         String? @db.MediumText
-  Profesion       String? @db.MediumText
-  CodBar          String? @db.VarChar(255)
-  FechaNacimiento String? @db.VarChar(255)
-  Cargo           String? @db.VarChar(255)
-  Departamento    String? @db.VarChar(255)
-  PathImg1        String? @db.MediumText
-  PathFirma       String? @db.LongText
-  Codigo          String? @db.VarChar(50)
-}
-
-model tbleclipses {
-  IdTipo  Int     @id @default(autoincrement())
-  Eclipse String? @db.VarChar(50)
-  TIpo    String? @db.VarChar(255)
-}
-
-model tblfaseslunares {
-  id      Int       @id @default(autoincrement())
-  Fecha   DateTime? @db.DateTime(0)
-  Luna    Int?      @db.TinyInt
-  Eclipse Int?      @db.TinyInt
-}
-
-model tblfestivos {
-  Id         Int       @id @default(autoincrement())
-  Dia        DateTime? @db.DateTime(0)
-  Festividad String?   @db.VarChar(50)
-}
-
-model tbllunas {
-  Id     Int     @id @default(autoincrement())
-  idLuna Int?    @db.TinyInt
-  Luna   String? @db.VarChar(50)
-}
-
-model tblnotas {
-  Id   Int       @id @default(autoincrement())
-  Dia  DateTime? @db.DateTime(0)
-  Hora Int?      @db.TinyInt
-  Nota String?   @db.VarChar(255)
+  id              Int     @id @default(0)
+  descripcionSede String? @db.VarChar(255)
+  codigoEntidad   String? @db.VarChar(255)
 }
 
 model Santoral {
-  Id         Int     @id @default(autoincrement())
-  Dia        Int?    @db.TinyInt
-  Mes        Int?    @db.TinyInt
-  Festividad String? @db.VarChar(255)
-}
-
-model team_invitations {
-  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  teamId     BigInt    @db.UnsignedBigInt
-  email      String    @db.VarChar(255)
-  role       String?   @db.VarChar(255)
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
-  teams      Team      @relation(fields: [teamId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "team_invitations_teamId_foreign")
-
-  @@unique([teamId, email], map: "team_invitations_teamId_email_unique")
-}
-
-model TeamUser {
-  id         BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  teamId     BigInt    @db.UnsignedBigInt
-  userId     BigInt    @db.UnsignedBigInt
-  role       String?   @db.VarChar(255)
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
-
-  @@unique([teamId, userId], map: "team_user_teamId_userId_unique")
-}
-
-model Team {
-  Id               BigInt           @id @default(autoincrement()) @db.UnsignedBigInt
-  userId           BigInt           @db.UnsignedBigInt
-  name             String           @db.VarChar(255)
-  personal_team    Boolean
-  created_at       DateTime?        @db.Timestamp(0)
-  updated_at       DateTime?        @db.Timestamp(0)
-  team_invitations TeamInvitation[]
-
-  @@index([userId], map: "teams_userId_index")
+  id         String  @id @default(uuid())
+  dia        Int?    @db.TinyInt
+  mes        Int?    @db.TinyInt
+  festividad String? @db.VarChar(255)
 }
 
 model UserType {
-  Id         String    @id @db.Char(26)
-  name       String    @unique(map: "user_types_name_unique") @db.VarChar(100)
-  deleted_at DateTime? @db.Timestamp(0)
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime? @db.Timestamp(0)
-  patient    Patient[]
+  id        String    @id @default(uuid())
+  name      String    @unique(map: "user_types_name_unique") @db.VarChar(100)
+  deletedAt DateTime? @db.Timestamp(0)
+  createdAt DateTime? @db.Timestamp(0)
+  updatedAt DateTime? @db.Timestamp(0)
+  patient   Patient[]
 }
 
 model User {
-  Id                        BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
-  name                      String    @db.VarChar(255)
-  email                     String    @unique(map: "users_email_unique") @db.VarChar(255)
-  email_verified_at         DateTime? @db.Timestamp(0)
-  password                  String    @db.VarChar(255)
-  two_factor_secret         String?   @db.Text
-  two_factor_recovery_codes String?   @db.Text
-  two_factor_confirmed_at   DateTime? @db.Timestamp(0)
-  remember_token            String?   @db.VarChar(100)
-  current_teamId            BigInt?   @db.UnsignedBigInt
-  profile_photo_path        String?   @db.VarChar(2048)
-  created_at                DateTime? @db.Timestamp(0)
-  updated_at                DateTime? @db.Timestamp(0)
+  id                     String    @id @default(uuid())
+  name                   String    @db.VarChar(255)
+  email                  String    @unique(map: "users_email_unique") @db.VarChar(255)
+  emailVerifiedAt        DateTime? @db.Timestamp(0)
+  password               String    @db.VarChar(255)
+  twoFactorSecret        String?   @db.Text
+  twoFactorRecoveryCodes String?   @db.Text
+  twoFactorConfirmedAt   DateTime? @db.Timestamp(0)
+  rememberToken          String?   @db.VarChar(100)
+  createdAt              DateTime? @default(now())
+  updatedAt              DateTime? @db.Timestamp(0)
 }
 
 enum appointment_events_rendering {
@@ -1163,27 +1071,28 @@ enum appointment_events_rendering {
 }
 
 enum PatientMeasureAge {
-  Dias // 1 @map("1")
-  Meses // 2 @map("2")
-  Anios // 3 @map("3")
+  Dias  @map("1")
+  Meses @map("2")
+  Anios @map("3")
 }
 
 enum PatientGenre {
-  F
-  M
+  Femenino
+  Masculino
+  Indeterminado
 }
 
 enum PatientHomeArea {
-  U
-  R
+  Urbano
+  Rural
 }
 
-enum ConsultationsStatus {
+enum ConsultaState {
   Scheduled
   Attended
-  Post_Scheduled @map("Post-Scheduled")
+  PostScheduled @map("Post Scheduled")
   Cancelled
-  Not_Attended   @map("Not Attended")
+  NotAttended   @map("Not Attended")
 }
 
 model Address {
@@ -1207,7 +1116,7 @@ model AdrressesOfPatients {
   @@id([patientId, addressId])
 }
 
-model AffiliateTypes {
+model AffiliateType {
   id        String    @id @default(uuid())
   code      String    @db.Char(1)
   name      String    @unique() @db.VarChar(30)
