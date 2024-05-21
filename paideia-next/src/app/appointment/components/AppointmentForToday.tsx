@@ -120,7 +120,6 @@ function AppointmentForToday() {
             <TableRow>
               <TableCell>Fecha</TableCell>
               <TableCell>Hora</TableCell>
-              <TableCell>Doctor</TableCell>
               <TableCell>Paciente</TableCell>
               <TableCell>Entidad</TableCell>
               <TableCell>Contacto</TableCell>
@@ -133,11 +132,9 @@ function AppointmentForToday() {
                 <TableRow key={appointment.Id}>
                   <TableCell>{formatDate(appointment.Fecha)}</TableCell>
                   <TableCell>{appointment.Hora}</TableCell>
-                  <TableCell>{appointment.IdMedico}</TableCell>
                   <TableCell>{appointment.Paciente}</TableCell>
                   <TableCell>{appointment.Entidad}</TableCell>
                   <TableCell>{appointment.Telefono}</TableCell>
-                  <TableCell>{appointment.Estado}</TableCell>
                   <AppointmentStatus status={appointment.Estado} />
                 </TableRow>
               ))

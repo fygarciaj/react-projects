@@ -10,16 +10,31 @@ export function AppointmentStatus({ status }) {
     useEffect(() => {
 
         switch (status) {
-            case '3 - ACEPTADA':
-                setColorStatus('primary')
+            case '6 - LLAMANDO':
+                setColorStatus('#cccccc');
                 break;
-
+            case '5-INCUMPLIDA':
+                setColorStatus('#ff0000');
+                break;
+            case '4-CANCELADA':
+                setColorStatus('#fa770c');
+                break;
+            case '3-PROGRAMADA':
+                setColorStatus('#0051ff');
+                break;
+            case '2-ATENDIDO':
+                setColorStatus('#026b03');
+                break;
+            case '1-EN ESPERA':
+                setColorStatus('#e1da06');
+                break;
         }
+        console.log('colorStatus', colorStatus);
     }, []);
 
     return (
         <TableCell>
-            <Chip color="{colorStatus}" label={status} />
+            <Chip sx={{ color: 'white', bgcolor: colorStatus }} label={status} />
         </TableCell >
     );
 }
