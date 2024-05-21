@@ -8,6 +8,7 @@ import {
   Typography
 } from '@mui/material';
 import { AppointmentStatus } from './AppointmentStatus';
+import { AppointmentGridForToday } from './AppointmentGridForToday';
 
 
 function AppointmentForToday() {
@@ -146,6 +147,7 @@ function AppointmentForToday() {
           </TableBody>
         </Table>
       </TableContainer>
+      <AppointmentGridForToday data={appointments} />
     </Box>
   );
 }
