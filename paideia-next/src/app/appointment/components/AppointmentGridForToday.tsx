@@ -29,7 +29,6 @@ export function AppointmentGridForToday({data}) {
         includeOutliers: true,
         includeHeaders: true,
       }}
-      autoH
       />
   );
 }
