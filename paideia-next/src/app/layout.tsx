@@ -38,9 +38,12 @@ export default function RootLayout({
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
             >
-                <MenuItem onClick={handleMenuClose} component={Link} href="/">Home</MenuItem>
+                <MenuItem onClick={handleMenuClose} component={Link} href="/">Inicio</MenuItem>
                 <MenuItem onClick={handleMenuClose}>
-                  <Link href="/appointment">Appointments</Link>
+                  <Link href="/appointment">Citas</Link>
+                </MenuItem>    
+                <MenuItem onClick={handleMenuClose}>
+                  <Link href="/patient">Pacientes</Link>
                 </MenuItem>
               <MenuItem onClick={handleMenuClose}>Opción 3</MenuItem>
             </Menu>
