@@ -1,17 +1,10 @@
 'use client'
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem, Container, Grid, Box } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from "react";
+import Link from "next/link";
 
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "Paideia",
-  description: "Fabian Yesith Garcia Jurado",
-};
 
 export default function RootLayout({
   children,
@@ -21,7 +14,7 @@ export default function RootLayout({
 
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleMenuOpen = (event) => {
+  const handleMenuOpen = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -38,15 +31,17 @@ export default function RootLayout({
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" style={{ flexGrow: 1 }}>
-              Mi Aplicación
+              Aplicación
             </Typography>
             <Menu
               anchorEl={anchorEl}
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
             >
-              <MenuItem onClick={handleMenuClose}>Opción 1</MenuItem>
-              <MenuItem onClick={handleMenuClose}>Opción 2</MenuItem>
+                <MenuItem onClick={handleMenuClose} component={Link} href="/">Home</MenuItem>
+                <MenuItem onClick={handleMenuClose}>
+                  <Link href="/appointment">Appointments</Link>
+                </MenuItem>
               <MenuItem onClick={handleMenuClose}>Opción 3</MenuItem>
             </Menu>
           </Toolbar>
