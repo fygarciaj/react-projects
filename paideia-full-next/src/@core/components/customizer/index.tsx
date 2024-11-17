@@ -362,7 +362,7 @@ const Customizer = ({ breakpoint = 'lg', dir = 'ltr', disableDirection = false }
             <div className='layout-section flex flex-col gap-6'>
               <Chip
                 variant='tonal'
-                label='Layout'
+                label='Temp_layout'
                 size='small'
                 color='primary'
                 className={classnames('self-start', styles.chip)}

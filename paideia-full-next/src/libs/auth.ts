@@ -35,7 +35,7 @@ export const authOptions: NextAuthOptions = {
         const { email, password } = credentials as { email: string; password: string }
 
         try {
-          // ** Login API Call to match the user credentials and receive user data in response along with his role
+          // ** Page API Call to match the user credentials and receive user data in response along with his role
           const res = await fetch(`${process.env.API_URL}/login`, {
             method: 'POST',
             headers: {

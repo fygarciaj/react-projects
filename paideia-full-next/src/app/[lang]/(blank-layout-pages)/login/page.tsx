@@ -9,7 +9,7 @@ import { getServerMode } from '@core/utils/serverHelpers'
 
 export const metadata: Metadata = {
   title: 'Login',
-  description: 'Login to your account'
+  description: 'Page to your account'
 }
 
 const LoginPage = () => {
